@@ -1,2 +1,2 @@
-# AniFam
-Anime-based Plex Server
+# Ani x Family
+Ani x Family (A play on words to the show Spy x Family) is an anime-based plex server that aims to allow users to stream anime without the annoying ads and bloat that other public streaming services have. However, still provide live ratings and synopsis of every show based on public information. Ani x Family also provides forums and working comments sections platform in order for anime watchers to share their opinions and just communicate their enjoyment of their favorite shows with other anime watchers.
