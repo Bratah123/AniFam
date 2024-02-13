@@ -18,10 +18,9 @@ Ani x Family targets the following versions:
 **Ani x Family** is intended to be run on Ubuntu in production; the core team develops on Windows 11. Hence, the tech stack is compatible with both Windows and UNIX-like OSes.
 
 ### Set-up
-1. Install [Python 3.11+](https://www.python.org/downloads/) [NOTE] IT IS IMPORTANT THAT YOU SET IT TO PATH
-    - `pip` should come with your Python installation.
+1. Install [Python 3.11+](https://www.python.org/downloads/); [NOTE] IT IS IMPORTANT THAT YOU SET IT TO PATH
+![image](https://github.com/Bratah123/AniFam/assets/58405975/53613b44-3e0d-4f68-ad89-de69775a2776)
 
 2. Install [Node.js](https://nodejs.org/en)
-    -`npm` should come with your Node.js installation.
 
 3. Working directory is `/src` unless otherwise specified
