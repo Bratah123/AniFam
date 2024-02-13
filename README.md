@@ -19,8 +19,8 @@ Ani x Family targets the following versions:
 
 ### Set-up
 1. Install [Python 3.11+](https://www.python.org/downloads/); [NOTE] IT IS IMPORTANT THAT YOU SET IT TO PATH
-![image](https://github.com/Bratah123/AniFam/assets/58405975/53613b44-3e0d-4f68-ad89-de69775a2776)
-
+  ![image](https://github.com/Bratah123/AniFam/assets/58405975/53613b44-3e0d-4f68-ad89-de69775a2776)
 2. Install [Node.js](https://nodejs.org/en)
-
 3. Working directory is `/src` unless otherwise specified
+4. Run: `cd src`
+5. Run: `npm install`
