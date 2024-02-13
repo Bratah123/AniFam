@@ -25,3 +25,7 @@ Ani x Family targets the following versions:
 3. Working directory is `/src` unless otherwise specified
 4. Run: `cd src`
 5. Run: `npm install`
+
+# Disclaimer
+`Ani x Family` is an open-source full stack web application that collects anime-related metadata and media, and serves them to end users. Ani x Family is an educational project for demonstrating various techniques, such as web scraping and UI design.
+The creators of Ani x Family urge users and end users of the project, and/or any derivatives of Ani x Family, to support the creators of anime titles by purchasing their works, merchandise, and/or a subscription for consuming them, through official channels. Ani x Family is non-monetised, and provided as is. Every reasonable effort has been taken to ensure correctness and reliability of Ani x Family. We will not be liable for any special, direct, indirect, or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action if contract, negligence or other tortious action, arising out of or in connection with the use of Ani x Family (in part or in whole).
