@@ -12,6 +12,7 @@ Ani x Family targets the following versions:
 - Python 3.11+
 - Next.js 13+
 - Node.js 21+
+
 *Note: This is not an exhaustive list*  
 *Note2: The core team uses VS Code*
 
