@@ -29,7 +29,7 @@ These instructions are applicable to Windows environment only.
 5. Run: `npm install`
 6. Run: `python -m venv venv`
 7. Run: `venv/Scripts/activate` (Windows)
-  - This puts you into the venv python shell
+    - This puts you into the venv python shell
 8. Run: `pip install -r requirements.txt`
 
 # Disclaimer
