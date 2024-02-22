@@ -18,13 +18,19 @@ Ani x Family targets the following versions:
 
 **Ani x Family** is intended to be run on Ubuntu in production; the core team develops on Windows 11. Hence, the tech stack is compatible with both Windows and UNIX-like OSes.
 
-### Set-up
+## Set-up for Development (Initial)
+> [!IMPORTANT]
+These instructions are applicable to Windows environment only.
 1. Install [Python 3.11+](https://www.python.org/downloads/); [NOTE] IT IS IMPORTANT THAT YOU SET IT TO PATH
   ![image](https://github.com/Bratah123/AniFam/assets/58405975/53613b44-3e0d-4f68-ad89-de69775a2776)
 2. Install [Node.js](https://nodejs.org/en)
 3. Working directory is `/src` unless otherwise specified
 4. Run: `cd src`
 5. Run: `npm install`
+6. Run: `python -m venv venv`
+7. Run: `venv/Scripts/activate` (Windows)
+  - This puts you into the venv python shell
+8. Run: `pip install -r requirements.txt`
 
 # Disclaimer
 `Ani x Family` is an open-source full stack web application that collects anime-related metadata and media, and serves them to end users. Ani x Family is an educational project for demonstrating various techniques, such as web scraping and UI design.
