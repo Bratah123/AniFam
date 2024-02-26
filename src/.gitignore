@@ -37,7 +37,7 @@ __pycache__
 
 # python
 /venv
-instance/
+instance/config.py
 
 # database
 *.db
