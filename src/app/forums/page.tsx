@@ -1,5 +1,5 @@
 import React from 'react';
-import TopicList from '../../components/TopicList';
+import TopicList from './topic_list';
 
 const Home: React.FC = () => {
   // basic mock topics for now hi brandon
