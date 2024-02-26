@@ -20,6 +20,7 @@ from flask import Flask
 from waitress import serve
 
 import logger
+import sys
 
 PORT = 4444
 
@@ -31,5 +32,18 @@ app.config.from_pyfile("config.py")
 def hello_world():
     return "<p>Hello, World!</p>"
 
+
+def main(): # Entry point of flask server
+    cli_arguments = sys.argv
+
+    if "--dev_mode" in cli_arguments: # Development
+        log.info("Start logging for development server")
+        app.run(debug=True, port=PORT)
+        logger.shutdown_logger()
+    else: # Production
+        serve(app, host="localhost", port=PORT)
+        logger.shutdown_logger()
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=PORT)
+    main()
