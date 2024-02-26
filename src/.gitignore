@@ -37,3 +37,6 @@ __pycache__
 
 # python
 /venv
+
+# database
+*.db
