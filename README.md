@@ -17,8 +17,8 @@ Ani x Family targets the following versions:
 *Note2: The core team uses VS Code*
 
 **Ani x Family** is intended to be run on Ubuntu in production; the core team develops on Windows 11. Hence, the tech stack is compatible with both Windows and UNIX-like OSes.
-
-## Set-up for Development (Initial)
+## Setup (Steps to be done in numbered order)
+### Set-up Development Environment Development (Initial)
 > [!IMPORTANT]
 These instructions are applicable to Windows environment only.
 0. Clone the [repository](https://github.com/Bratah123/AniFam)
@@ -33,6 +33,20 @@ These instructions are applicable to Windows environment only.
 8. Run: `venv/Scripts/activate` (Windows)
     - This puts you into the venv python shell
 9. Run: `pip install -r requirements.txt`
+
+### Running the Server (**Development**)
+The web application has two different servers, the NextJS front-end server and the Flask back-end server.
+Therefore there must be two instances of a terminal open.
+1. Open up two terminals of your choice
+2. Change the directories to be in the `/src` of the project in both terminals
+3. In one terminal run command: `npm run next-dev`
+4. Open up the other terminal and run: `./start.bat` and choose the development option when prompted.
+5. Now open up `localhost:3000` in any web browser!
+
+### Running the Server (**Production**)
+> [!IMPORTANT]
+These instructions are only applicable to a Linux OS Environment as intended.
+1. TBD
 
 # Disclaimer
 `Ani x Family` is an open-source full stack web application that collects anime-related metadata and media, and serves them to end users. `Ani x Family` is an educational project for demonstrating various techniques, such as web scraping and UI design.
