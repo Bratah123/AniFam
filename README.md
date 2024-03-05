@@ -33,6 +33,7 @@ These instructions are applicable to Windows environment only.
 8. Run: `venv/Scripts/activate` (Windows)
     - This puts you into the venv python shell
 9. Run: `pip install -r requirements.txt`
+10. Navigate to [src/instance](https://github.com/Bratah123/AniFam/tree/main/src/instance) and follow the instructions there.
 
 ### Running the Server (**Development**)
 The web application has two different servers, the NextJS front-end server and the Flask back-end server.
