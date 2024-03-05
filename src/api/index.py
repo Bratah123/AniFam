@@ -22,7 +22,7 @@ from waitress import serve
 import logger
 import sys
 
-PORT = 4444
+PORT = 5328
 
 log = logger.get_logger(__name__)
 app = Flask(__name__, instance_relative_config=True)
