@@ -8,7 +8,7 @@ function Header() {
   return (
     <header className="flex flex-row space-x-2 bg-black/80 xl:space-x-4">
       <Image
-        src="/anya_chibi_happy.jpg"
+        src="/anya_chibi_t.png"
         alt="Image of tiny anya"
         width={100}
         height={100}

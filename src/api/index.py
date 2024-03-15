@@ -16,7 +16,7 @@
 #
 # Contact via Discord: `newhashmap` (Brandon)
 
-from flask import Flask
+from flask import Flask, Response, request, jsonify
 from waitress import serve
 
 import logger
@@ -28,9 +28,25 @@ log = logger.get_logger(__name__)
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile("config.py")
 
-@app.route("/api/python")
-def hello_world():
-    return "<p>Hello, World!</p>"
+@app.route("/login/request", methods=["POST"])
+def login() -> tuple[Response, int]:
+    form_info = request.form
+
+    status = 401
+    access_token = None
+
+    username = form_info["username"]
+    password = form_info["password"]
+
+    log.info("User %s is attempting to log in", username)
+    
+    # TODO: Add database checking
+
+    return jsonify(
+        status=status,
+        message="Login successful",
+        access_token=access_token
+    )
 
 
 def main(): # Entry point of flask server
