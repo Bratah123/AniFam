@@ -23,7 +23,7 @@ function Header() {
 // Login Page
 export default function Page() {
   return (
-    <div className="flex h-screen flex-col justify-between bg-slate-900 bg-[url(/album_collage_1080.jpeg)] bg-cover bg-center bg-no-repeat opacity-80 bg-blend-screen">
+    <div className="flex h-screen flex-col justify-between bg-slate-900 bg-[url(/album_collage_1080.jpg)] bg-cover bg-center bg-no-repeat opacity-80 bg-blend-screen">
       <Header />
       <Login />
       <div></div>
