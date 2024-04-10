@@ -1,15 +1,21 @@
 'use client';
 import { useState } from 'react';
 import { redirect } from 'next/navigation';
+import { sendLoginRequest } from '@/app/actions';
 
 export default function Login() {
   const [message, setMessage] = useState<string>(''); // Init as empty
 
   async function onLogin(data: FormData) {
     // TODO: Add login logic
+    const result = await sendLoginRequest(data);
+    // Update form if there was an error
+    if (result) {
+      setMessage(result.message);
+    }
   }
 
-  if (message === 'Login successful') {
+  if (message === 'Success') {
     redirect('/home');
   }
 
@@ -18,7 +24,7 @@ export default function Login() {
       <div className="mix-blend-color-screen -mt-20 rounded-xl bg-cyan-100/90 p-5 drop-shadow-2xl sm:w-1/3 xl:w-1/6">
         <form
           id="loginForm"
-          /*action={onLogin}*/
+          action={onLogin}
           className="flex flex-col items-center gap-2"
         >
           <label className="text-2xl font-bold text-black">Login</label>

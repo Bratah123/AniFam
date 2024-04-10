@@ -17,7 +17,10 @@
 # Contact via Discord: `newhashmap` (Brandon)
 
 from flask import Flask, Response, request, jsonify
+from flask_jwt_extended import create_access_token
 from waitress import serve
+from database.database import AniFamDatabase
+from hasher import verify_hash
 
 import logger
 import sys
@@ -31,6 +34,7 @@ app.config.from_pyfile("config.py")
 @app.route("/login/request", methods=["POST"])
 def login() -> tuple[Response, int]:
     form_info = request.form
+    status_message = ""
 
     status = 401
     access_token = None
@@ -40,11 +44,26 @@ def login() -> tuple[Response, int]:
 
     log.info("User %s is attempting to log in", username)
     
-    # TODO: Add database checking
+    with AniFamDatabase() as db:
+        user = db.fetch_user(username)
+        # if user cannot be found based off the username in the database
+        if not user:
+            log.info("User %s does not exist", username)
+            status_message = "User does not exist"
+        elif verify_hash(password, user[1]): # If user exists, then check if the password is correct
+            log.info("User %s has entered an incorrect password", username)
+            status_message = "Incorrect password"
+            status = 200
+            status_message = "Success"
+            # Create the JWT access token which allows us to authenticate the user
+            access_token = create_access_token(username)
+        else: # If the user exists but the password is incorrect
+            log.info("User %s has failed to login due to wrong password.", username)
+            status_message = "Invalid password"
 
     return jsonify(
         status=status,
-        message="Login successful",
+        message=status_message,
         access_token=access_token
     )
 
