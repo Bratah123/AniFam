@@ -35,6 +35,7 @@ These instructions are applicable to Windows environment only.
 9. Run: `pip install -r requirements.txt`
 10. Navigate to [src/instance](https://github.com/Bratah123/AniFam/tree/main/src/instance) and follow the instructions there.
 11. In a terminal assuming the terminal is in `AniFam/src` run the command `python api/database/init_database.py` to initialize the database.
+    - This should create both an `admin` account and a `guest` account. The admin account has password: `admin` and guest account with password: `guest`
 
 ### Running the Server (**Development**)
 The web application has two different servers, the NextJS front-end server and the Flask back-end server.
