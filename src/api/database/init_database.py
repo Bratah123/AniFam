@@ -37,7 +37,7 @@ def init_db():
         print("Admin account already exists!")
     else:
         con.execute(
-            f"INSERT INTO user (username, password, email, is_admin) VALUES ('admin', 'admin', '{admin_password}', 1)"
+            f"INSERT INTO user (username, password, email, is_admin) VALUES ('admin', '{admin_password}', '', 1)"
         )
         print("Created admin account!")
 
@@ -46,10 +46,10 @@ def init_db():
         print("Guest account already exists!")
     else:
         con.execute(
-            f"INSERT INTO user (username, password, email, is_admin) VALUES ('guest', 'guest', '{guest_password}', 0)"
+            f"INSERT INTO user (username, password, email, is_admin) VALUES ('guest', '{guest_password}', '', 0)"
         )
         print("Created guest account!")
-        
+
     # TODO: Complete the database schema
     con.commit()
     con.close()
