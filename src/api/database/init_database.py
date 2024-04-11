@@ -26,6 +26,24 @@ def init_db():
     con.execute(
         "CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, email TEXT, is_admin BOOL)"
     )
+    # Create a guest admin account if it doesn't exist
+    # Query for the admin account
+    admin = con.execute("SELECT * FROM user WHERE username = 'admin'").fetchone()
+    if admin:
+        print("Admin account already exists!")
+    else:
+        con.execute(
+            "INSERT INTO user (username, password, email, is_admin) VALUES ('admin', 'admin', '', 1)"
+        )
+        print("Created admin account!")
+    guest = con.execute("SELECT * FROM user WHERE username = 'guest'").fetchone()
+    if guest:
+        print("Guest account already exists!")
+    else:
+        con.execute(
+            "INSERT INTO user (username, password, email, is_admin) VALUES ('guest', 'guest', '', 0)"
+        )
+        print("Created guest account!")
     # TODO: Complete the database schema
     con.commit()
     con.close()

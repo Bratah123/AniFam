@@ -20,7 +20,7 @@ from flask import Flask, Response, request, jsonify
 from flask_jwt_extended import create_access_token
 from waitress import serve
 from database.database import AniFamDatabase
-from hasher import verify_hash
+from api.util.hasher import verify_hash
 
 import logger
 import sys
