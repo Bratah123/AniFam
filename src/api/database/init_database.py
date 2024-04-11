@@ -24,8 +24,19 @@ from argon2 import PasswordHasher
 def init_db():
     print("Initializing database...")
     con = sqlite3.connect("anifam.db") # Creates the database if it doesn't exist
+
+    # User table
     con.execute(
         "CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, email TEXT, is_admin BOOL)"
+    )
+    # Anime table
+    # image TEXT: this contains a URL from cdn.myanimelist.net likely scraped from the website
+    # episodes TEXT: This is a comma separated list of episode numbers I.E. "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+    # total_episodes INTEGER: This is the total number of episodes in the anime
+    # genre TEXT: This is a comma separated list of genres I.E. "Action, Adventure, Comedy, Drama, Fantasy, Magic, Romance, School, Shoujo"
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS animes (anime_id INTEGER PRIMARY KEY, \
+            title TEXT, description TEXT, rating REAL, synopsis TEXT, image TEXT, genre TEXT, episodes TEXT, date_edited datetime, total_episodes INTEGER)"
     )
     # Create a guest admin account if it doesn't exist
     # Query for the admin account
