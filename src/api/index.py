@@ -17,7 +17,7 @@
 # Contact via Discord: `newhashmap` (Brandon)
 
 from flask import Flask, Response, request, jsonify
-from flask_jwt_extended import create_access_token, JWTManager
+from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_jwt, get_jwt_identity
 from waitress import serve
 from database.database import AniFamDatabase
 from util.hasher import verify_hash
@@ -57,7 +57,7 @@ def login() -> tuple[Response, int]:
             status = 200
             status_message = "Success"
             # Create the JWT access token which allows us to authenticate the user
-            access_token = create_access_token(username)
+            access_token = create_access_token(identity=username, additional_claims={"is_admin": user[3]})
         else: # If the user exists but the password is incorrect
             log.info("User %s has failed to login due to wrong password.", username)
             status_message = "Invalid password"
@@ -68,6 +68,15 @@ def login() -> tuple[Response, int]:
         access_token=access_token
     )
 
+@app.route("/homepage", methods=["GET"])
+@jwt_required()
+def home_page() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    is_admin = get_jwt()["is_admin"]
+
+    # TODO: Add logic for animes loading
+
+    return jsonify(logged_in_as=user, recently_updated=[], is_admin=is_admin)
 
 def main(): # Entry point of flask server
     cli_arguments = sys.argv
