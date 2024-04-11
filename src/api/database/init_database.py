@@ -19,6 +19,7 @@
     This script is be run once to initialize the database.
 """
 import sqlite3
+from argon2 import PasswordHasher
 
 def init_db():
     print("Initializing database...")
@@ -29,21 +30,26 @@ def init_db():
     # Create a guest admin account if it doesn't exist
     # Query for the admin account
     admin = con.execute("SELECT * FROM user WHERE username = 'admin'").fetchone()
+    admin_password = PasswordHasher().hash("admin")
+    guest_password = PasswordHasher().hash("guest")
+
     if admin:
         print("Admin account already exists!")
     else:
         con.execute(
-            "INSERT INTO user (username, password, email, is_admin) VALUES ('admin', 'admin', '', 1)"
+            f"INSERT INTO user (username, password, email, is_admin) VALUES ('admin', 'admin', '{admin_password}', 1)"
         )
         print("Created admin account!")
+
     guest = con.execute("SELECT * FROM user WHERE username = 'guest'").fetchone()
     if guest:
         print("Guest account already exists!")
     else:
         con.execute(
-            "INSERT INTO user (username, password, email, is_admin) VALUES ('guest', 'guest', '', 0)"
+            f"INSERT INTO user (username, password, email, is_admin) VALUES ('guest', 'guest', '{guest_password}', 0)"
         )
         print("Created guest account!")
+        
     # TODO: Complete the database schema
     con.commit()
     con.close()
