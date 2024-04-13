@@ -11,11 +11,11 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-screen justify-center items-center bg-slate-1000 bg-[url(/anime_spyxfamily_officialart_souvenir.jpg)] bg-cover bg-center bg-no-repeat opacity-85">
-      <div className="mt-25 absolute top-0 left-0 w-full text-center">
-        <h1 className="text-5xl font-bold text-white mb-4">Ani x Family Forums</h1>
+    <div className="flex flex-col h-screen bg-slate-1000 bg-[url(/album_collage_1080.jpg)] bg-cover bg-center bg-no-repeat opacity-85">
+      <div className="py-8 px-4 bg-black bg-opacity-80">
+        <h1 className="text-5xl font-bold text-white text-center mb-4">Ani x Family Forums</h1>
       </div>
-      <div className="text-left bg-left opacity-100 items-left text-3xl font-bold mb-0 bg-slate-1000 bg-opacity-90">
+      <div className="flex-grow">
         <TopicList topics={topics} />
       </div>
     </div>
