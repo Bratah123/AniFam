@@ -16,7 +16,7 @@
 #
 # Contact via Discord: `newhashmap` (Brandon)
 
-from flask import Flask, Response, request, jsonify
+from flask import Flask, Response, request, jsonify, render_template
 from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_jwt, get_jwt_identity
 from waitress import serve
 from database.database import AniFamDatabase
@@ -28,7 +28,7 @@ import sys
 PORT = 5328
 
 log = logger.get_logger(__name__)
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__, instance_relative_config=True, static_folder="static", template_folder="templates")
 app.config.from_pyfile("config.py")
 
 jwt = JWTManager(app)
@@ -75,8 +75,28 @@ def home_page() -> tuple[Response, int]:
     is_admin = get_jwt()["is_admin"]
 
     # TODO: Add logic for animes loading
+    mock_animes = [ # This will be shown to users
+        {
+            "title": "Spy x Family",
+            "available_episodes": 0,
+            "total_episodes": 12,
+            "rating": 9.5,
+            "synopsis": "Watch anya go on dangerous missions with her family!",
+            "genres": ["Action", "Comedy", "Adventure"],
+            "image": "https://cdn.myanimelist.net/images/anime/1441/122795.jpg",
+        },
+        {
+            "title": "Bunny Girl Senpai",
+            "available_episodes": 0,
+            "total_episodes": 12,
+            "rating": 10,
+            "synopsis": "The rare and inexplicable Puberty Syndrome is thought of as a myth. It is a rare disease which only affects teenagers, and its symptoms are so supernatural that hardly anyone recognizes it as a legitimate occurrence",
+            "genres": ["Drama", "Romance", "Supernatural"],
+            "image": "https://cdn.myanimelist.net/images/anime/1301/93586.jpg",
+        }
+    ]
 
-    return jsonify(logged_in_as=user, recently_updated=[], is_admin=is_admin)
+    return jsonify(logged_in_as=user, hottest_hits=mock_animes, is_admin=is_admin)
 
 def main(): # Entry point of flask server
     cli_arguments = sys.argv
