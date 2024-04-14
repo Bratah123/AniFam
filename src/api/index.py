@@ -28,7 +28,7 @@ import sys
 PORT = 5328
 
 log = logger.get_logger(__name__)
-app = Flask(__name__, instance_relative_config=True, static_folder="static", template_folder="templates")
+app = Flask(__name__, instance_relative_config=True, static_folder="static")
 app.config.from_pyfile("config.py")
 
 jwt = JWTManager(app)
