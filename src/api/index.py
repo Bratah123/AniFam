@@ -16,7 +16,7 @@
 #
 # Contact via Discord: `newhashmap` (Brandon)
 
-from flask import Flask, Response, request, jsonify, render_template
+from flask import Flask, Response, request, jsonify
 from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_jwt, get_jwt_identity
 from waitress import serve
 from database.database import AniFamDatabase
