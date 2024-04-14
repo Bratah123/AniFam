@@ -47,3 +47,25 @@ class AniFamDatabase:
             log.error("Error fetching user: %s", e)
             return None
         return cursor.fetchone()
+    
+    def fetch_all_users(self) -> list[dict[str, str] | None]:
+        """Fetch all users
+
+        Returns:
+            A list of dictionaries where each dictionary represents a row with column names as keys.
+        """
+        cursor = self.con.cursor()
+        try:
+            cursor.execute("SELECT * FROM user")
+        except sqlite3.OperationalError as e:
+            log.error("Error fetching all users: %s", e)
+            return None
+
+        column_names = [description[0] for description in cursor.description]
+        results = []
+
+        for row in cursor.fetchall():
+            user_dict = {column_names[i]: row[i] for i in range(len(column_names))}
+            results.append(user_dict)
+
+        return results

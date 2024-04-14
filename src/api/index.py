@@ -105,6 +105,19 @@ def media_page() -> tuple[Response, int]:
     user_is_admin = get_jwt()["is_admin"]
     return jsonify(logged_in_as=user, is_admin=user_is_admin), 200
 
+@app.route("/users", methods=["GET"])
+@jwt_required()
+def get_users() -> tuple[Response, int]:
+    # Only admins can access this route
+    user = get_jwt_identity()
+    is_admin = get_jwt()["is_admin"]
+    if not is_admin:
+        return jsonify(logged_in_as=user, message="You are not authorized to access this route"), 401
+    users = []
+    with AniFamDatabase() as db:
+        users = db.fetch_all_users()
+    return jsonify(users=users), 200
+
 def main(): # Entry point of flask server
     cli_arguments = sys.argv
 

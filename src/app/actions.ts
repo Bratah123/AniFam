@@ -104,3 +104,30 @@ export async function fetchAnyAvailSession(
 
     return await result.json();
 }
+
+export async function fetchUsers() {
+    const jwt = cookies().get('access_token');
+    let result: Response;
+    try {
+      result = await fetch('http://127.0.0.1:5328/users', {
+        method: 'GET',
+        cache: 'no-cache',
+        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${jwt?.value}`,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+    if (result.status === 200) {
+      // User is authenticated
+    }
+  
+    if (result.status === 401 || result.status === 422) {
+      console.log('User is not authenticated');
+      redirect('/');
+    }
+    return result.json();
+  }
