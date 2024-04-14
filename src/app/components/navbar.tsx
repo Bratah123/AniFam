@@ -11,13 +11,20 @@ function classNames(...classes: string[]) {
 
 type NavBarProp = {
   isAdmin: boolean;
+  // These determine what button to highlight
+  onHome: boolean;
+  onForums: boolean;
+  onAdmin: boolean;
 };
 
-export default function Navbar({ isAdmin }: NavBarProp) {
-  const navigation = [{ name: 'Home', href: '/home', current: true }];
+export default function Navbar({ isAdmin, onHome, onForums, onAdmin }: NavBarProp) {
+  const navigation = [
+    { name: 'Home', href: '/home', current: onHome },
+    { name: 'Forums', href: '/forums', current: onForums },
+  ];
 
   if (isAdmin) {
-    navigation.push({ name: 'Admin', href: '/admin', current: false });
+    navigation.push({ name: 'Admin', href: '/admin', current: onAdmin });
   }
 
   const [search, setSearch] = useState('');
