@@ -98,6 +98,13 @@ def home_page() -> tuple[Response, int]:
 
     return jsonify(logged_in_as=user, hottest_hits=mock_animes, is_admin=is_admin)
 
+@app.route("/mediapage", methods=["GET"])
+@jwt_required()
+def media_page() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    return jsonify(logged_in_as=user, is_admin=user_is_admin), 200
+
 def main(): # Entry point of flask server
     cli_arguments = sys.argv
 
