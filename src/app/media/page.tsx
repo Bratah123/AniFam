@@ -7,8 +7,6 @@ export default async function MediaPage(params: any) {
     const searchParams = params.searchParams;
     const animeName = searchParams.animeName;
 
-    console.log(result);
-    
     return (
         <div>
         <Navbar isAdmin={result.is_admin} onHome={false} onAdmin={false} onForums={false} />
