@@ -126,7 +126,7 @@ def main(): # Entry point of flask server
         app.run(debug=True, port=PORT)
         logger.shutdown_logger()
     else: # Production
-        serve(app, host="localhost", port=PORT)
+        serve(app, host="0.0.0.0", port=PORT)
         logger.shutdown_logger()
 
 
