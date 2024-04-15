@@ -118,6 +118,13 @@ def get_users() -> tuple[Response, int]:
         users = db.fetch_all_users()
     return jsonify(users=users), 200
 
+@app.route("/forums", methods=["GET"])
+@jwt_required()
+def forums() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    return jsonify(logged_in_as=user, is_admin=user_is_admin), 200
+
 def main(): # Entry point of flask server
     cli_arguments = sys.argv
 
