@@ -49,7 +49,7 @@ export default function UserEditForm(prop: {
           <select
             id="role"
             className="mb-8 flex h-10 w-full items-center rounded border border-gray-300 pl-3 text-sm font-normal text-gray-600 focus:border focus:border-indigo-700 focus:outline-none"
-            value={prop.user.is_admin ? 'admin' : 'user'}
+            value={isAdmin ? 'admin' : 'user'}
             onChange={(e) => {
               setIsAdmin(e.target.value === 'admin');
             }}
