@@ -11,13 +11,15 @@ export default async function MediaPage(params: any) {
 
     const result = await fetchAnyAvailSession('mediapage');
     const searchParams = params.searchParams;
+
     const animeName = searchParams.animeName;
+    // const episode = parseInt(searchParams.episode.trim());
 
     return (
         <div>
         <Navbar isAdmin={result.is_admin} onHome={false} onAdmin={false} onForums={false} />
         <h1>You are supposed to be watching: {animeName}</h1>
-        <AnimePlayer videoPath={`http://${VIDEO_SERVER_IP}:5328/static/E2.mp4`}/>
+        <AnimePlayer videoPath={`http://${VIDEO_SERVER_IP}:5328/static/${animeName}/E1.mp4`}/>
         </div>
     );
 }

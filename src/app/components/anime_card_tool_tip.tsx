@@ -10,7 +10,7 @@ export interface AnimeToolTipProps {
   synopsis: string;
   rating: string;
   genres: string[];
-  availableEpisodes: string;
+  episodes: string[]
   totalEpisodes: string;
 }
 
@@ -29,7 +29,7 @@ export const AnimeToolTip = ({
   synopsis,
   rating,
   genres,
-  availableEpisodes,
+  episodes,
   totalEpisodes,
 }: Props) => {
   const tooltipReference = useRef<HTMLDivElement>(null);
@@ -67,7 +67,7 @@ export const AnimeToolTip = ({
               &#11088; {rating}
             </span>
             <span className="text-right text-sm text-slate-200">
-              Episodes: {availableEpisodes}/{totalEpisodesInt ? totalEpisodes : '?'}
+              Episodes: {episodes.length}/{totalEpisodesInt ? totalEpisodes : '?'}
             </span>
           </div>
           <p className="mt-3 line-clamp-5 flex-1 text-justify text-xs text-slate-300">

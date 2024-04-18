@@ -5,7 +5,7 @@ export interface AnimeMetadata {
   title: string;
   image: string;
   rating: string;
-  available_episodes: string;
+  episodes: string[];
   total_episodes: string;
   synopsis: string;
   genres: string[];
@@ -23,7 +23,7 @@ export function AnimeTable({ animeList }: Props) {
           key={index}
           image={anime.image}
           title={anime.title}
-          availableEpisodes={anime.available_episodes}
+          episodes={anime.episodes}
           totalEpisodes={anime.total_episodes}
           synopsis={anime.synopsis}
           rating={anime.rating}

@@ -17,7 +17,7 @@ interface AnimeCardProp extends AnimeToolTipProps {
 export default function AnimeCard({
   image,
   title,
-  availableEpisodes,
+  episodes,
   totalEpisodes,
   synopsis,
   rating,
@@ -30,7 +30,7 @@ export default function AnimeCard({
         synopsis={synopsis}
         rating={rating}
         genres={genres}
-        availableEpisodes={availableEpisodes}
+        episodes={episodes}
         totalEpisodes={totalEpisodes}
       >
         <Link
@@ -38,7 +38,7 @@ export default function AnimeCard({
             pathname: '/media',
             query: {
               animeName: title,
-              totalEpisodes: availableEpisodes,
+              totalEpisodes: episodes.length,
             },
           }}
           className="flex flex-col text-center hover:cursor-pointer hover:bg-gray-700"

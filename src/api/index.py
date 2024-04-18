@@ -141,7 +141,7 @@ def anime_upload() -> tuple[Response, int]:
         'genres': form_data["genres"],
         'image': form_data["imageUrl"],
     }
-    # TODO: Upload information to database
+    
     with AniFamDatabase() as db:
         anime = db.fetch_anime(anime_upload_data["title"])
         if anime: # If the anime already exists, then check if the episode already exists
