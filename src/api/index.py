@@ -75,29 +75,24 @@ def home_page() -> tuple[Response, int]:
     user = get_jwt_identity()
     is_admin = get_jwt()["is_admin"]
 
+    hottest_hits = []
     # TODO: Add logic for animes loading
-    mock_animes = [ # This will be shown to users
-        {
-            "title": "Spy x Family",
-            "available_episodes": 0,
-            "total_episodes": 12,
-            "rating": 9.5,
-            "synopsis": "Watch anya go on dangerous missions with her family!",
-            "genres": ["Action", "Comedy", "Adventure"],
-            "image": "https://cdn.myanimelist.net/images/anime/1441/122795.jpg",
-        },
-        {
-            "title": "Bunny Girl Senpai",
-            "available_episodes": 0,
-            "total_episodes": 12,
-            "rating": 10,
-            "synopsis": "The rare and inexplicable Puberty Syndrome is thought of as a myth. It is a rare disease which only affects teenagers, and its symptoms are so supernatural that hardly anyone recognizes it as a legitimate occurrence",
-            "genres": ["Drama", "Romance", "Supernatural"],
-            "image": "https://cdn.myanimelist.net/images/anime/1301/93586.jpg",
-        }
-    ]
+    with AniFamDatabase() as db:
+        animes = db.fetch_top_rated_animes(20)
+        hottest_hits = [
+            {
+                "title": anime.title,
+                "available_episodes": len(anime.episodes),
+                "total_episodes": anime.total_episodes,
+                "rating": anime.rating,
+                "synopsis": anime.synopsis,
+                "genres": anime.genre,
+                "image": anime.image,
+                "episodes": anime.episodes
+            } for anime in animes
+        ]
 
-    return jsonify(logged_in_as=user, hottest_hits=mock_animes, is_admin=is_admin)
+    return jsonify(logged_in_as=user, hottest_hits=hottest_hits, is_admin=is_admin)
 
 @app.route("/mediapage", methods=["GET"])
 @jwt_required()
@@ -144,12 +139,27 @@ def anime_upload() -> tuple[Response, int]:
         'synopsis': form_data["synopsis"],
         'rating': form_data["rating"],
         'genres': form_data["genres"],
-        'imageUrl': form_data["imageUrl"],
+        'image': form_data["imageUrl"],
     }
     # TODO: Upload information to database
+    with AniFamDatabase() as db:
+        anime = db.fetch_anime(anime_upload_data["title"])
+        if anime: # If the anime already exists, then check if the episode already exists
+            if form_data["episode"] in anime.episodes:
+                return jsonify(logged_in_as=user, message="Episode already exists", status=409)
+            # If the episode does not exist, then update the episode list
+            result = db.update_anime(anime_upload_data)
+            log.info("Anime %s has been updated in the database", anime_upload_data["title"])
+        else:
+            result = db.save_anime(anime_upload_data)
+            if not result:
+                return jsonify(logged_in_as=user, message="Error saving anime to database", status=500)
+            log.info("Anime %s has been saved to the database", anime_upload_data["title"])
+
     anime_episode_file = request.files['file'] # Should always be one file
     anime_file_name = f"E{form_data['episode']}.mp4"
     anime_folder_name = form_data["title"]
+
     # Create a folder for the anime if it does not exist
     if not os.path.exists(os.path.join(app.static_folder, anime_folder_name)):
         log.info("Creating folder for anime %s", anime_folder_name)

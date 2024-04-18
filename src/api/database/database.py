@@ -3,6 +3,30 @@ import logger
 
 log = logger.get_logger(__name__)
 
+class AnimeData:
+    def __init__(self) -> None:
+        self.anime_id = 0
+        self.title = ''
+        self.description = ''
+        self.rating = 0.0
+        self.synopsis = ''
+        self.image = ''
+        self.genre = []
+        self.episodes = []
+        self.total_episodes = ''
+
+    def load(self, data: tuple) -> None:
+        self.anime_id = int(data[0])
+        self.title = data[1]
+        self.description = data[2]
+        self.rating = float(data[3])
+        self.synopsis = data[4]
+        self.image = data[5]
+        self.genre = data[6].split(',')
+        self.episodes = data[7].split(',')
+        self.total_episodes = int(data[9])
+        return self
+
 class AniFamDatabase:
     """
         Represents the AniFam database.
@@ -12,8 +36,25 @@ class AniFamDatabase:
         Syntax:
         with AniFamDatabase() as db:
             # Insert any queries here
-
         # Automatically closes the connection after the block
+
+        The following database tables are available:
+        user:
+            username TEXT
+            password TEXT
+            email TEXT
+            is_admin BOOL
+        animes:
+            anime_id INTEGER PRIMARY KEY
+            title TEXT
+            description TEXT
+            rating REAL
+            synopsis TEXT
+            image TEXT : cdn.myanimelist.net URL
+            genre TEXT : comma separated list of genres I.E. "Action, Adventure"
+            episodes TEXT : comma separated list of episode numbers I.E. "1,2,3,4"
+            date_edited datetime
+            total_episodes INTEGER : This keeps track of how many episodes total the anime SHOULD have not how many are available.
     """
 
     def __init__(self):
@@ -72,14 +113,107 @@ class AniFamDatabase:
     
     # This is for first time inputing in a new anime into the database
     def save_anime(self, anime_data):
+        """
+            anime_data (dict): A dictionary containing the anime data to save
+            anime_data = {
+                'title': str,
+                'episode': str,
+                'synopsis': str,
+                'rating': str,
+                'genres': str, Comma separated list of genres
+                'image': str
+            }
+        """
         cursor = self.con.cursor()
         try:
             cursor.execute(
-                "INSERT INTO anime (title, episode, synopsis, rating, genres, imageUrl) VALUES (?, ?, ?, ?, ?, ?)",
-                (anime_data['title'], anime_data['episode'], anime_data['synopsis'], anime_data['rating'], anime_data['genres'], anime_data['imageUrl'])
+                "INSERT INTO animes (title, rating, synopsis, image, genre, episodes, date_edited, total_episodes) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), 0)",
+                (
+                    anime_data["title"],
+                    anime_data["rating"],
+                    anime_data["synopsis"],
+                    anime_data["image"],
+                    anime_data["genres"],
+                    anime_data["episode"],
+                )
             )
-            self.con.commit()
         except sqlite3.OperationalError as e:
             log.error("Error saving anime: %s", e)
+            return False
+        self.con.commit()
+        return True
+    
+    def update_anime(self, anime_data):
+        """
+            anime_data (dict): A dictionary containing the anime data to save
+            anime_data = {
+                'title': str,
+                'episode': str,
+                'synopsis': str,
+                'rating': str,
+                'genres': str, Comma separated list of genres
+                'image': str
+            }
+        """
+        # Fetch the anime first to get the episode list
+        anime = self.fetch_anime(anime_data["title"])
+        if not anime:
+            return False
+        episodes = anime.episodes
+        if anime_data["episode"] not in episodes:
+            episodes.append(anime_data["episode"])
+            episodes = ','.join(episodes)
+        cursor = self.con.cursor()
+
+        try:
+            cursor.execute(
+                "UPDATE animes SET rating=?, synopsis=?, image=?, genre=?, episodes=?, date_edited=datetime('now') WHERE title=?",
+                (
+                    anime_data["rating"],
+                    anime_data["synopsis"],
+                    anime_data["image"],
+                    anime_data["genres"],
+                    episodes,
+                    anime_data["title"],
+                )
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error updating anime: %s", e)
+            return False
+        self.con.commit()
+        return True
+
+    def fetch_anime(self, title: str) -> AnimeData | None:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "SELECT * FROM animes WHERE title=?",
+                (title,)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error fetching anime: %s", e)
             return None
-        return cursor.fetchone()
+        anime = cursor.fetchone()
+        if not anime:
+            return None
+        anime_data = AnimeData()
+        anime_data.load(anime)
+        return anime_data
+    
+    def fetch_top_rated_animes(self, limit: int) -> list[AnimeData]:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "SELECT * FROM animes ORDER BY rating DESC LIMIT ?",
+                (limit,)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error fetching top rated animes: %s", e)
+            return None
+        animes = cursor.fetchall()
+        if not animes:
+            return []
+        anime_data = []
+        for anime in animes:
+            anime_data.append(AnimeData().load(anime))
+        return anime_data
