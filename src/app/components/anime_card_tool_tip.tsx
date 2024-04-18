@@ -34,6 +34,7 @@ export const AnimeToolTip = ({
 }: Props) => {
   const tooltipReference = useRef<HTMLDivElement>(null);
   const containerReference = useRef<HTMLDivElement>(null);
+  const totalEpisodesInt = parseInt(totalEpisodes);
 
   return (
     <div
@@ -66,7 +67,7 @@ export const AnimeToolTip = ({
               &#11088; {rating}
             </span>
             <span className="text-right text-sm text-slate-200">
-              Episodes: {availableEpisodes}/{totalEpisodes}
+              Episodes: {availableEpisodes}/{totalEpisodesInt ? totalEpisodes : '?'}
             </span>
           </div>
           <p className="mt-3 line-clamp-5 flex-1 text-justify text-xs text-slate-300">
