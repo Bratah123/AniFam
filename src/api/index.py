@@ -24,6 +24,7 @@ from util.hasher import verify_hash
 
 import logger
 import sys
+import os
 
 PORT = 5328
 
@@ -124,6 +125,49 @@ def forums() -> tuple[Response, int]:
     user = get_jwt_identity()
     user_is_admin = get_jwt()["is_admin"]
     return jsonify(logged_in_as=user, is_admin=user_is_admin), 200
+
+@app.route("/admin/upload", methods=["POST"])
+@jwt_required()
+def anime_upload() -> tuple[Response, int]:
+    """
+        This is the route where the input form for uploading an anime will be displayed.
+    """
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    if not user_is_admin:
+        return jsonify(logged_in_as=user, message="You are not authorized to access this route"), 401
+
+    form_data = request.form
+    anime_upload_data = {
+        'title': form_data["title"],
+        'episode': form_data["episode"],
+        'synopsis': form_data["synopsis"],
+        'rating': form_data["rating"],
+        'genres': form_data["genres"],
+        'imageUrl': form_data["imageUrl"],
+    }
+    # TODO: Upload information to database
+    anime_episode_file = request.files['file'] # Should always be one file
+    anime_file_name = f"E{form_data['episode']}.mp4"
+    anime_folder_name = form_data["title"]
+    # Create a folder for the anime if it does not exist
+    if not os.path.exists(os.path.join(app.static_folder, anime_folder_name)):
+        log.info("Creating folder for anime %s", anime_folder_name)
+        os.makedirs(os.path.join(app.static_folder, anime_folder_name))
+    
+    # Check if the video already exists
+    if os.path.exists(os.path.join(app.static_folder, anime_folder_name, anime_file_name)):
+        log.info("User %s tried to upload an episode that already exists.")
+        return jsonify(logged_in_as=user, message="Episode already exists", status=409)
+    
+    # Save the file to the folder
+    try:
+        anime_episode_file.save(os.path.join(app.static_folder, anime_folder_name, anime_file_name))
+    except Exception as e:
+        log.error("Error saving file: %s", e)
+        return jsonify(logged_in_as=user, message="Error saving file", status=500)
+
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200)
 
 def main(): # Entry point of flask server
     cli_arguments = sys.argv

@@ -12,6 +12,9 @@ export default function Admin() {
     const [genres, setGenres] = useState('');
     const [imageUrl, setImageUrl] = useState('https://cdn.myanimelist.net/images/anime/1441/122795.jpg');
     const [file, setFile] = useState('');
+    
+    // Add another attribute that will store the video file with type File
+    const [videoFile, setVideoFile] = useState<File | null>(null);
 
     /**
      * Validate the URL to ensure it is a valid image URL
@@ -40,9 +43,14 @@ export default function Admin() {
         formData.append('rating', rating);
         formData.append('genres', genres);
         formData.append('imageUrl', imageUrl);
-        formData.append('file', file);
+        formData.append('file', videoFile as Blob);
         const data = await uploadAnime(formData);
-        console.log(data);
+
+        if (data.status === 200) {
+            alert('Anime uploaded successfully');
+        } else {
+            alert(data.message);
+        }
     }
     return (
         <div
@@ -71,8 +79,15 @@ export default function Admin() {
                 }}
                 />
                 {/*<Image src={imageUrl} alt="Anime Image" width={200} height={300}/>*/}
-                <InputField label="Video File (spy.mp4)" placeholder="Upload Video" value={file} type="file" required={true}
-                            onChange={(e) => setFile(e.target.value)}/>
+                <InputField label="Video File (spy.mp4)" placeholder="Upload Video" value={file} type="file" required={true} accept="video/mp4"
+                            onChange={
+                                (e) => {
+                                    setFile(e.target.value)
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        setVideoFile(file);
+                                    }
+                                }}/>
 
                 <button
                     className="my-8 rounded bg-indigo-700 px-8 py-2 text-sm text-white transition duration-150 ease-in-out hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-offset-2">

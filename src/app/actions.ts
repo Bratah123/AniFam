@@ -136,7 +136,7 @@ export async function uploadAnime(data: FormData) {
   const jwt = cookies().get('access_token');
   let result: Response;
   try {
-      result = await fetch('http://http://127.0.0.1:5328/admin/upload', {
+      result = await fetch('http://127.0.0.1:5328/admin/upload', {
           method: 'POST',
           body: data,
           cache: 'no-cache',

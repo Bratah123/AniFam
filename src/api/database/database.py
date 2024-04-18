@@ -69,3 +69,17 @@ class AniFamDatabase:
             results.append(user_dict)
 
         return results
+    
+    # This is for first time inputing in a new anime into the database
+    def save_anime(self, anime_data):
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO anime (title, episode, synopsis, rating, genres, imageUrl) VALUES (?, ?, ?, ?, ?, ?)",
+                (anime_data['title'], anime_data['episode'], anime_data['synopsis'], anime_data['rating'], anime_data['genres'], anime_data['imageUrl'])
+            )
+            self.con.commit()
+        except sqlite3.OperationalError as e:
+            log.error("Error saving anime: %s", e)
+            return None
+        return cursor.fetchone()
