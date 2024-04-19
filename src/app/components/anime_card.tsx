@@ -38,7 +38,7 @@ export default function AnimeCard({
             pathname: '/media',
             query: {
               animeName: title,
-              totalEpisodes: episodes.length,
+              episode: episodes[0],
             },
           }}
           className="flex flex-col text-center hover:cursor-pointer hover:bg-gray-700"
