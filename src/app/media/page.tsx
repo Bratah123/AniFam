@@ -2,6 +2,26 @@ import Navbar from '@/app/components/navbar';
 import { fetchAnyAvailSession } from '@/app/actions';
 import AnimePlayer from '@/app/components/anime_player';
 import Divider from '@/app/components/divider';
+import EpisodeButton from '@/app/components/episode_button';
+
+function initEpisodeButtonData(animeName: string, episodes: string[]) {
+    const episodeNavButtons: any[] = [];
+
+    episodes.forEach((episode, _) => {
+        let visualEpisode = episode;
+        let intEpisode = parseInt(episode);
+        if (intEpisode < 10) {
+            visualEpisode = '0' + episode;
+        }
+        episodeNavButtons.push({
+            episode: episode,
+            visualEpisode: visualEpisode,
+            animeName: animeName,
+        });
+    });
+
+    return episodeNavButtons;
+}
 
 // THIS IS THE IP OF THE FLASK SERVER THAT SERVES THE VIDEOS
 // CHANGE THIS TO THE Public ipv4 address of the machine this is running on
@@ -15,6 +35,7 @@ export default async function MediaPage(params: any) {
     const episodes = result.episodes;
     const episode = searchParams.episode;
     const animeName = searchParams.animeName;
+    const episodeButtonData = initEpisodeButtonData(animeName, episodes);
 
     return (
         <div>
@@ -25,7 +46,22 @@ export default async function MediaPage(params: any) {
             </h2>
             <br></br>
             <Divider />
-            <AnimePlayer videoPath={`http://${VIDEO_SERVER_IP}:5328/static/${animeName}/E${episode}.mp4`}/>
+            <div className="flex justify-center">
+                <div className="max-w-md rounded bg-gray-800 p-2 shadow-lg">
+                    <div className="mb-2 text-sm font-bold">List of episodes:</div>
+                    <div className={`md:grid md:grid-cols-5 md:gap-1`}>
+                        {episodeButtonData.map((episodeNavButton, index) => (
+                        <EpisodeButton
+                            key={index}
+                            episode={episodeNavButton.episode}
+                            visualEpisode={episodeNavButton.visualEpisode}
+                            animeName={episodeNavButton.animeName}
+                        />
+                        ))}
+                    </div>
+                </div>
+                <AnimePlayer videoPath={`http://${VIDEO_SERVER_IP}:5328/static/${animeName}/E${episode}.mp4`}/>
+            </div>
         </div>
     );
 }
