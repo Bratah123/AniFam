@@ -3,6 +3,7 @@ import { fetchAnyAvailSession } from '@/app/actions';
 import AnimePlayer from '@/app/components/anime_player';
 import Divider from '@/app/components/divider';
 import EpisodeButton from '@/app/components/episode_button';
+import { CommentSection } from '@/app/components/comment_section';
 
 function initEpisodeButtonData(animeName: string, episodes: string[]) {
     const episodeNavButtons: any[] = [];
@@ -46,6 +47,7 @@ export default async function MediaPage(params: any) {
             </h2>
             <br></br>
             <Divider />
+            <br></br>
             <div className="flex justify-center">
                 <div className="max-w-md rounded bg-gray-800 p-2 shadow-lg">
                     <div className="mb-2 text-sm font-bold">List of episodes:</div>
@@ -62,6 +64,7 @@ export default async function MediaPage(params: any) {
                 </div>
                 <AnimePlayer videoPath={`http://${VIDEO_SERVER_IP}:5328/static/${animeName}/E${episode}.mp4`}/>
             </div>
+            <CommentSection />
         </div>
     );
 }
