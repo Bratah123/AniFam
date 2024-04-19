@@ -8,12 +8,12 @@ import AnimePlayer from '@/app/components/anime_player';
 const VIDEO_SERVER_IP = '127.0.0.1';
 
 export default async function MediaPage(params: any) {
-
-    const result = await fetchAnyAvailSession('mediapage');
     const searchParams = params.searchParams;
 
+    const result = await fetchAnyAvailSession('mediapage', {'animeName': searchParams.animeName});
+    const episodes = result.episodes;
+
     const animeName = searchParams.animeName;
-    // const episode = parseInt(searchParams.episode.trim());
 
     return (
         <div>

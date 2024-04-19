@@ -217,3 +217,18 @@ class AniFamDatabase:
         for anime in animes:
             anime_data.append(AnimeData().load(anime))
         return anime_data
+    
+    def fetch_episodes_from_anime(self, title: str) -> list[str] | None:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "SELECT episodes FROM animes WHERE title=?",
+                (title,)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error fetching episodes from anime: %s", e)
+            return None
+        episodes = cursor.fetchone()
+        if not episodes:
+            return None
+        return episodes[0].split(',')

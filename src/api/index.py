@@ -99,7 +99,20 @@ def home_page() -> tuple[Response, int]:
 def media_page() -> tuple[Response, int]:
     user = get_jwt_identity()
     user_is_admin = get_jwt()["is_admin"]
-    return jsonify(logged_in_as=user, is_admin=user_is_admin), 200
+    anime_name = request.args.get("animeName")
+
+    if not anime_name:
+        return jsonify(logged_in_as=user, message="Anime name not provided", status=400)
+    
+    episodes = []
+
+    with AniFamDatabase() as db:
+        episodes = db.fetch_episodes_from_anime(anime_name)
+    
+    if not episodes:
+        return jsonify(logged_in_as=user, message="Anime does not exist", status=404)
+    
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, episodes=episodes), 200
 
 @app.route("/users", methods=["GET"])
 @jwt_required()
