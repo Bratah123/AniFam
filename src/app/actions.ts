@@ -57,6 +57,31 @@ export async function sendLoginRequest(data: FormData) {
     }
 }
 
+export async function sendRegistrationRequest(username: string, password: string) {
+    let rawResult: Response;
+    let result;
+    let form = new FormData();
+    const jwt = cookies().get('access_token');
+    form.append('username', username);
+    form.append('password', password);
+    // Send registration request to server
+    try {
+        rawResult = await fetch('http://127.0.0.1:5328/register', {
+            method: 'POST',
+            body: form,
+            cache: 'no-cache',
+            credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${jwt?.value}`,
+            },
+        });
+        result = await rawResult.json();
+    } catch (error) {
+        console.log(error);
+    }
+    return result;
+}
+
 // Requests the flask server to check any active JWT session and return the user's data
 export async function fetchAnyAvailSession(
     apiPath: string,

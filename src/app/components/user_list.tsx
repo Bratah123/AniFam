@@ -7,6 +7,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import UserEditForm from '@/app/components/user_edit_form';
 import { useEffect, useState } from 'react';
 import { fetchUsers } from '@/app/actions';
+import RegistrationForm from "@/app/components/registration_form";
 
 export function getRole(isAdmin: boolean) {
   return isAdmin ? 'Admin' : 'User';
@@ -38,6 +39,10 @@ export default function UserList() {
     setUserToDelete('');
     setCreateUser(false);
   };
+
+  const handleSave = (username: string) => {
+    users.push({username: username, email: '', password: '*******', is_admin: false});
+  }
   return (
     <div className="mx-auto max-w-screen-2xl px-4 py-8 sm:px-8">
       <div className="flex items-center justify-between pb-7">
@@ -123,6 +128,17 @@ export default function UserList() {
             onClick={handleClose} // Close the modal when clicking on the overlay
           ></div>
         </div>
+      )}
+      {createUser && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
+            <div
+                className="fixed inset-0 bg-black opacity-50"
+                onClick={handleClose} // Close the modal when clicking on the overlay
+            ></div>
+            <div className="relative z-50">
+              <RegistrationForm onClose={handleClose} onSave={handleSave} />
+            </div>
+          </div>
       )}
     </div>
   );
