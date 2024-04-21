@@ -27,6 +27,8 @@ export default function Navbar({ isAdmin, onHome, onForums, onAdmin }: NavBarPro
     navigation.push({ name: 'Admin', href: '/admin', current: onAdmin });
   }
 
+  navigation.push({ name: 'Logout', href: '/', current: false });
+
   const [search, setSearch] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   return (

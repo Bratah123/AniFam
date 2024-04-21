@@ -3,7 +3,7 @@
 * This client component is used to display a list of registered users.
 * ONLY TO BE USED IN THE ADMIN PANEL.
 */
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import UserEditForm from '@/app/components/user_edit_form';
 import { useEffect, useState } from 'react';
 import { fetchUsers } from '@/app/actions';
@@ -22,6 +22,7 @@ type UserProps = {
 export default function UserList() {
   const [users, setUsers] = useState<UserProps[]>([]);
   const [userToEdit, setUserToEdit] = useState('');
+  const [userToDelete, setUserToDelete] = useState('');
   const [createUser, setCreateUser] = useState(false);
 
   const getUsers = async () => {
@@ -34,6 +35,7 @@ export default function UserList() {
   }, []);
   const handleClose = () => {
     setUserToEdit('');
+    setUserToDelete('');
     setCreateUser(false);
   };
   return (
@@ -85,7 +87,13 @@ export default function UserList() {
                       onClick={() => setUserToEdit(user.username)}
                       className="hover:text-black"
                     >
-                      <FaEdit />
+                    <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => setUserToDelete(user.username)}
+                      className="hover:text-black px-4"
+                    >
+                    <FaTrash />
                     </button>
                   </td>
                 </tr>
@@ -106,6 +114,14 @@ export default function UserList() {
               onClose={handleClose}
             />
           </div>
+        </div>
+      )}
+      {userToDelete !== '' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
+          <div
+            className="fixed inset-0 bg-black opacity-50"
+            onClick={handleClose} // Close the modal when clicking on the overlay
+          ></div>
         </div>
       )}
     </div>
