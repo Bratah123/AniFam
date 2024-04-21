@@ -101,6 +101,38 @@ def register() -> tuple[Response, int]:
 
     return jsonify(status=status, message=status_message)
 
+@app.route("/user", methods=["DELETE"])
+@jwt_required()
+def register() -> tuple[Response, int]:
+    form_info = request.form
+    status_message = ""
+
+    # Check if user is an admin
+    is_admin = get_jwt()["is_admin"]
+    if not is_admin:
+        return jsonify(message="You are not authorized to access this route"), 401
+    
+    username = form_info["username"]
+
+    log.info("User %s is attempting to delete", username)
+    
+    with AniFamDatabase() as db:
+        user = db.fetch_user(username)
+        if not user:
+            log.info("User %s does not exist", username)
+            return jsonify(message="User does not exist", status=404)
+        if db.delete_user(username):
+            log.info("User %s has been deleted", username)
+            status_message = "Success"
+            status = 200
+        else:
+            log.info("User %s failed to delete", username)
+            status_message = "Failed to delete"
+            status = 500
+
+    return jsonify(status=status, message=status_message)
+
+
 @app.route("/homepage", methods=["GET"])
 @jwt_required()
 def home_page() -> tuple[Response, int]:

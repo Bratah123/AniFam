@@ -257,3 +257,16 @@ class AniFamDatabase:
             return False
         self.con.commit()
         return True
+    
+    def delete_user(self, username: str) -> bool:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "DELETE FROM user WHERE username=?",
+                (username,)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error deleting user: %s", e)
+            return False
+        self.con.commit()
+        return True
