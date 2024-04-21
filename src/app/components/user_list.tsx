@@ -6,12 +6,13 @@
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import UserEditForm from '@/app/components/user_edit_form';
 import { useEffect, useState } from 'react';
-import { fetchUsers } from '@/app/actions';
+import { fetchUsers, sendDeleteUserRequest } from '@/app/actions';
 import RegistrationForm from "@/app/components/registration_form";
 
 export function getRole(isAdmin: boolean) {
   return isAdmin ? 'Admin' : 'User';
 }
+
 
 type UserProps = {
   username: string;
@@ -23,8 +24,22 @@ type UserProps = {
 export default function UserList() {
   const [users, setUsers] = useState<UserProps[]>([]);
   const [userToEdit, setUserToEdit] = useState('');
-  const [userToDelete, setUserToDelete] = useState('');
   const [createUser, setCreateUser] = useState(false);
+
+  function handleDelete(username: string) {
+    const deleteUser = confirm('Are you sure you want to delete this user?');
+    if (!deleteUser) {
+        return;
+    }
+    sendDeleteUserRequest(username).then((res) => {
+        if (res.status === 200) {
+            const newUsers = users.filter((user) => user.username !== username);
+            setUsers(newUsers);
+        } else {
+            alert(res.message);
+        }
+    });
+  }
 
   const getUsers = async () => {
     const res = await fetchUsers();
@@ -36,7 +51,6 @@ export default function UserList() {
   }, []);
   const handleClose = () => {
     setUserToEdit('');
-    setUserToDelete('');
     setCreateUser(false);
   };
 
@@ -95,8 +109,8 @@ export default function UserList() {
                     <FaEdit />
                     </button>
                     <button
-                      onClick={() => setUserToDelete(user.username)}
-                      className="hover:text-black px-4"
+                        onClick={() => handleDelete(user.username)}
+                        className="hover:text-black px-4"
                     >
                     <FaTrash />
                     </button>
@@ -119,14 +133,6 @@ export default function UserList() {
               onClose={handleClose}
             />
           </div>
-        </div>
-      )}
-      {userToDelete !== '' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
-          <div
-            className="fixed inset-0 bg-black opacity-50"
-            onClick={handleClose} // Close the modal when clicking on the overlay
-          ></div>
         </div>
       )}
       {createUser && (

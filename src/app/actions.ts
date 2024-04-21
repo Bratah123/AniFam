@@ -82,6 +82,30 @@ export async function sendRegistrationRequest(username: string, password: string
     return result;
 }
 
+export async function sendDeleteUserRequest(username: string) {
+    const jwt = cookies().get('access_token');
+    let rawResult: Response;
+    let result;
+    let form = new FormData();
+    form.append('username', username);
+    // Send registration request to server
+    try {
+        rawResult = await fetch('http://127.0.0.1:5328/user', {
+            method: 'DELETE',
+            body: form,
+            cache: 'no-cache',
+            credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${jwt?.value}`,
+            },
+        });
+        result = await rawResult.json();
+    } catch (error) {
+        console.log(error);
+    }
+    return result;
+}
+
 // Requests the flask server to check any active JWT session and return the user's data
 export async function fetchAnyAvailSession(
     apiPath: string,
