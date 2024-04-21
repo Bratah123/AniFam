@@ -103,7 +103,7 @@ def register() -> tuple[Response, int]:
 
 @app.route("/user", methods=["DELETE"])
 @jwt_required()
-def register() -> tuple[Response, int]:
+def delete_user() -> tuple[Response, int]:
     form_info = request.form
     status_message = ""
 
@@ -115,7 +115,7 @@ def register() -> tuple[Response, int]:
     username = form_info["username"]
 
     log.info("User %s is attempting to delete", username)
-    
+
     with AniFamDatabase() as db:
         user = db.fetch_user(username)
         if not user:
