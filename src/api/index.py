@@ -69,6 +69,38 @@ def login() -> tuple[Response, int]:
         access_token=access_token
     )
 
+@app.route("/register", methods=["POST"])
+@jwt_required()
+def register() -> tuple[Response, int]:
+    form_info = request.form
+    status_message = ""
+
+    # Check if user is an admin
+    is_admin = get_jwt()["is_admin"]
+    if not is_admin:
+        return jsonify(message="You are not authorized to access this route"), 401
+    
+    username = form_info["username"]
+    password = form_info["password"]
+
+    log.info("User %s is attempting to register", username)
+
+    with AniFamDatabase() as db:
+        user = db.fetch_user(username)
+        if user:
+            log.info("User %s already exists", username)
+            return jsonify(message="User already exists", status=409)
+        if db.register_user(username, password):
+            log.info("User %s has been registered", username)
+            status_message = "Success"
+            status = 200
+        else:
+            log.info("User %s failed to register", username)
+            status_message = "Failed to register"
+            status = 500
+
+    return jsonify(status=status, message=status_message)
+
 @app.route("/homepage", methods=["GET"])
 @jwt_required()
 def home_page() -> tuple[Response, int]:

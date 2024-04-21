@@ -1,5 +1,6 @@
 import sqlite3
 import logger
+from util.hasher import hash_string
 
 log = logger.get_logger(__name__)
 
@@ -232,3 +233,27 @@ class AniFamDatabase:
         if not episodes:
             return None
         return episodes[0].split(',')
+    
+    def register_user(self, username : str, password : str) -> bool:
+        """
+            Registers a user with the given username and password.
+
+            Args:
+                username (str): The username of the user
+                password (str): The password of the user
+
+            Returns:
+                bool: True if the user was registered successfully, False otherwise
+        """
+        hashed_password = hash_string(password)
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO user (username, password, is_admin) VALUES (?, ?, ?)",
+                (username, hashed_password, False)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error registering user: %s", e)
+            return False
+        self.con.commit()
+        return True
