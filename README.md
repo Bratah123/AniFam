@@ -46,6 +46,21 @@ Therefore there must be two instances of a terminal open.
 4. Open up the other terminal and run: `./start.bat` and choose the development option when prompted.
 5. Now open up `localhost:3000` in any web browser!
 
+### Running the Server (**Production for Windows**)
+These instructions assume that the [Environment](https://github.com/Bratah123/AniFam?tab=readme-ov-file#setup-steps-to-be-done-in-numbered-order) has been properly setup.
+1. Open up two terminals of your choice
+2. Change the directories to be in the `/src` of the project in both terminals
+3. In one terminal run command: `npm run build`
+4. In that same terminal run `npm run start`
+5. Open up the other terminal and run: `./start.bat` and choose the production option when prompted
+6. Now the website should be live on your local network at `http://public_ipv4_address:3000/`.
+
+### Opening the Website to Public (**Production**)
+These instructions are if you want to be able to access the website on a network where the website isn't hosted.
+1. Port forward the following ports (TCP): `3000` and `5328` (Flask Server)
+2. Change the [IP_ADDRESS](https://github.com/Bratah123/AniFam/blob/main/src/app/media/page.tsx#L30) constant to the machine's public IPv4 network.
+3. Done!
+
 ### Running the Server (**Production**)
 > [!IMPORTANT]
 These instructions are only applicable to a Linux OS Environment as intended.
