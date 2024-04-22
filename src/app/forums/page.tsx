@@ -1,34 +1,68 @@
-import React from 'react';
+'use client';
+import { useState, useEffect } from 'react';
 import TopicList from '@/app/components/topic_list';
 import { fetchAnyAvailSession } from "@/app/actions";
 import Navbar from '@/app/components/navbar';
-import Link from 'next/link';
 
-export default async function Forums(params: any) {
-  const res = await fetchAnyAvailSession('forums', params.searchParams);
+export default function Forums(params: any) {
+  const [showTopicForm, setShowTopicForm] = useState(false);
+  const [sessionData, setSessionData] = useState<any>(null); 
+
+  useEffect(() => {
+    // Fetch session data after the component mounts to avoid a fetch waterfall issue
+    const fetchSessionData = async () => {
+      const res = await fetchAnyAvailSession('forums', params.searchParams);
+      setSessionData(res);
+    };
+
+    fetchSessionData();
+  }, [params.searchParams]);
+
   // Basic mock topics for now
   const topics = [
     { id: 1, title: 'Announcements & Updates', description: 'Any changes and additions to AniFam!' },
     { id: 2, title: 'Favorite Anime of 2023', description: 'Share your top picks!' },
     { id: 3, title: 'Anime Recommendations', description: 'Looking for something new?' },
-    // Add more mock topics as needed
+    // Topics will be fetched from the database in the future
   ];
+
+  const handleToggleTopicForm = () => {
+    setShowTopicForm(!showTopicForm);
+  };
 
   return (
     <div className="flex flex-col h-screen relative bg-slate-1000 bg-[url(/album_collage_1080.jpg)] bg-cover bg-center bg-no-repeat opacity-85">
-      <Navbar isAdmin={res.is_admin} onHome={false} onForums={true} onAdmin={false} /> 
-      <div className="py-8 px-4 bg-black bg-opacity-80 relative">
+      <Navbar isAdmin={sessionData?.is_admin} onHome={false} onForums={true} onAdmin={false} /> 
+      <div className="py-4 px-4 bg-black bg-opacity-80 relative">
         <h1 className="text-5xl font-bold text-white text-center mb-4">Ani x Family Forums</h1>
       </div>
       <div className="flex-grow">
         <TopicList topics={topics} />
       </div>
-      {/* Button to navigate to the homepage */}
-      <Link href="/home">
-        <button className="fixed bottom-4 right-4 bg-gray-800 text-white py-2 px-4 rounded-lg shadow-md">
-          Go to Home
-        </button>
-      </Link>
+      <button className="fixed bottom-12 right-4 bg-gray-800 text-white py-2 px-4 rounded-lg shadow-md" onClick={handleToggleTopicForm}>
+        Create Topic
+      </button>
+      
+      {showTopicForm && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" style={{ backgroundColor: 'rgba(83, 228, 193, 0.9)', padding: '1rem', borderRadius: '12px' }}>
+          <form className="space-y-4">
+            <label htmlFor="title" className="block text-black">
+              Title:
+              <input type="text" id="title" name="title" className="border border-gray-300 rounded-md p-2 w-full" />
+            </label>
+            <label htmlFor="description" className="block text-black">
+              Description:
+              <textarea id="description" name="description" rows={4} className="border border-gray-300 rounded-md p-2 w-full"></textarea>
+            </label>
+            <button type="submit" className="bg-gray-800 text-white py-2 px-4 rounded-lg mt-4">
+              Create
+            </button>
+            <button className="bg-gray-800 text-white py-2 px-4 rounded-lg mt-4" onClick={handleToggleTopicForm}>
+              Cancel
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
