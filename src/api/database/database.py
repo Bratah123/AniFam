@@ -18,6 +18,7 @@
 import sqlite3
 import logger
 from util.hasher import hash_string
+from sqlite3 import Cursor
 
 log = logger.get_logger(__name__)
 
@@ -73,6 +74,11 @@ class AniFamDatabase:
             episodes TEXT : comma separated list of episode numbers I.E. "1,2,3,4"
             date_edited datetime
             total_episodes INTEGER : This keeps track of how many episodes total the anime SHOULD have not how many are available.
+        topics:
+            topicId INTEGER PRIMARY KEY
+            title TEXT
+            long_description TEXT
+            short_description TEXT
     """
 
     def __init__(self):
@@ -84,6 +90,12 @@ class AniFamDatabase:
     
     def __exit__(self, exc_type, exc_value, traceback):
         self.con.close()
+    
+    def execute(self, query, params=None):
+        cursor = self.con.cursor()
+        cursor.execute(query, params or ())
+        self.con.commit()
+        return cursor
 
     def fetch_user(self, username: str) -> tuple[str, str] | None:
         """
@@ -104,6 +116,18 @@ class AniFamDatabase:
                 )
         except sqlite3.OperationalError as e:
             log.error("Error fetching user: %s", e)
+            return None
+        return cursor.fetchone()
+
+    def fetch_topic_by_id(self, topic_id: int) -> tuple[str, str, str] | None:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "SELECT * FROM topics WHERE topic_id=?",
+                (topic_id,)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error fetching topic by ID: %s", e)
             return None
         return cursor.fetchone()
     
@@ -128,6 +152,8 @@ class AniFamDatabase:
             results.append(user_dict)
 
         return results
+    
+
     
     # This is for first time inputing in a new anime into the database
     def save_anime(self, anime_data):
@@ -287,3 +313,23 @@ class AniFamDatabase:
             return False
         self.con.commit()
         return True
+
+    def save_topic(self, title: str, long_description: str, short_description: str) -> bool:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO topics (title, long_description, short_description) VALUES (?, ?, ?)",
+                (title, long_description, short_description)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error saving topic: %s", e)
+            return False
+        self.con.commit()
+        return True
+    
+
+
+
+
+    
+    

@@ -29,6 +29,13 @@ def init_db():
     con.execute(
         "CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, email TEXT, is_admin BOOL)"
     )
+    # Topics table
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS topics (topic_id INTEGER PRIMARY KEY, \
+            title TEXT, long_description TEXT, short_description TEXT)"
+    )
+    
+
     # Anime table
     # image TEXT: this contains a URL from cdn.myanimelist.net likely scraped from the website
     # episodes TEXT: This is a comma separated list of episode numbers I.E. "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
