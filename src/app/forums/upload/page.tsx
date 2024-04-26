@@ -4,7 +4,7 @@ import InputField from "@/app/components/input_field";
 import {FormEvent, useState} from "react";
 import {uploadForumTopic} from "@/app/actions"; 
 
-export default function Forum() {
+export default function ForumsUploadPage() {
     const [title, setTitle] = useState('');
     const [long_description, setLongDescription] = useState('');
     const [short_description, setShortDescription] = useState('');
