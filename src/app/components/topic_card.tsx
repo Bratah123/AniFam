@@ -12,7 +12,6 @@ interface TopicCardProp extends TopicToolTipProps{
   long_description: string;
   short_description: string;
 }
-
 export default function TopicCard({
   topic_id,
   title,

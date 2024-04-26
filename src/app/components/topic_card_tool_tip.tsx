@@ -4,18 +4,15 @@ import { ReactNode, useRef } from 'react';
 /*
  This client component is used to display tooltips on hover for topic items.
 */
-
 export interface TopicToolTipProps {
   title: string;
     long_description: string;
     short_description: string;
   
 }
-
 interface Props extends TopicToolTipProps {
   children: ReactNode;
 }
-
 export const TopicToolTip = ({
   children,
   title,
@@ -24,7 +21,6 @@ export const TopicToolTip = ({
 }: Props) => {
   const tooltipReference = useRef<HTMLDivElement>(null);
   const containerReference = useRef<HTMLDivElement>(null);
-
   return (
     <div
       ref={containerReference}
