@@ -19,9 +19,8 @@
 from flask import Flask, Response, request, jsonify
 from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_jwt, get_jwt_identity
 from waitress import serve
-from database.database import AniFamDatabase
 from util.hasher import verify_hash
-
+from database.database import AniFamDatabase
 import logger
 import sys
 import os
@@ -178,6 +177,20 @@ def media_page() -> tuple[Response, int]:
     
     return jsonify(logged_in_as=user, is_admin=user_is_admin, episodes=episodes), 200
 
+@app.route("/topic", methods=["GET"])
+@jwt_required()
+def topic_page():
+    topic_id = request.args.get("topic_id")
+    if not topic_id:
+        return jsonify(message="Topic ID not provided", status=400)
+    
+    with AniFamDatabase() as db:
+        topic = db.fetch_topic_by_id(topic_id)
+        if not topic:
+            return jsonify(message="Topic does not exist", status=404)
+        
+        return jsonify(topic=topic), 200
+
 @app.route("/users", methods=["GET"])
 @jwt_required()
 def get_users() -> tuple[Response, int]:
@@ -190,13 +203,38 @@ def get_users() -> tuple[Response, int]:
     with AniFamDatabase() as db:
         users = db.fetch_all_users()
     return jsonify(users=users), 200
-
+    
 @app.route("/forums", methods=["GET"])
 @jwt_required()
 def forums() -> tuple[Response, int]:
     user = get_jwt_identity()
     user_is_admin = get_jwt()["is_admin"]
-    return jsonify(logged_in_as=user, is_admin=user_is_admin), 200
+    topics = [ # Dummy data
+        { 'id': 1, 'title': 'Announcements & Updates', 'long_description': 'Any changes and additions to AniFam!', 'short_description': 'Updates'},
+        { 'id': 2, 'title': 'Favorite Anime of 2023', 'long_description': 'Share your top picks!', 'short_description': 'Favorites'},
+        { 'id': 3, 'title': 'Anime Recommendations', 'long_description': 'Looking for something new?', 'short_description': 'Recommendations'},
+    ]
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, topics=topics), 200
+
+@app.route("/forums/upload", methods=["POST"])
+@jwt_required()
+def create_topic() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    if not user_is_admin:
+        return jsonify(logged_in_as=user, message="You are not authorized to access this route"), 401
+    form_data = request.form
+    topic_data = {
+        'title': form_data["title"],
+        'long_description': form_data["long_description"],
+        'short_description': form_data["short_description"]
+    }
+    with AniFamDatabase() as db:
+        success = db.save_topic(topic_data["title"], topic_data["long_description"], topic_data["short_description"])
+        if success:
+            return jsonify(logged_in_as=user, message="Topic saved successfully"), 201
+        else:
+            return jsonify(logged_in_as=user, message="Failed to save topic"), 500
 
 @app.route("/admin/upload", methods=["POST"])
 @jwt_required()
