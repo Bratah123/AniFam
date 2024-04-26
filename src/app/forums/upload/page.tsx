@@ -4,7 +4,7 @@ import InputField from "@/app/components/input_field";
 import {FormEvent, useState} from "react";
 import {uploadForumTopic} from "@/app/actions"; 
 
-export default function Admin() {
+export default function Forum() {
     const [title, setTitle] = useState('');
     const [long_description, setLongDescription] = useState('');
     const [short_description, setShortDescription] = useState('');
@@ -24,7 +24,6 @@ export default function Admin() {
             alert(data.message);
         }
     }
-
     return (
         <div className="flex flex-col h-screen relative bg-slate-1000 bg-[url(/album_collage_1080.jpg)] bg-cover bg-center bg-no-repeat opacity-85">
             <Navbar isAdmin={true} onAdmin={false} onHome={false} onForums={true}/>
