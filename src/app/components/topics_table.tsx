@@ -7,11 +7,9 @@ export interface Topic {
   long_description: string;
   short_description: string;
 }
-
 interface Props {
   topicList: Topic[];
 }
-
 export function TopicTable({ topicList }: Props) {
   return (
     <div className="flex flex-wrap justify-center gap-4 p-8 bg-cyan-400 text-white hover:bg-cyan-500 cursor-pointer">
