@@ -1,10 +1,8 @@
 import Navbar from '@/app/components/navbar';
 import { fetchAnyAvailSession } from '@/app/actions';
 
-
 function initTopicButtonData(topic_id: string, topics: any[]) {
     const topicButtons: any[] = [];
-
     topics.forEach((topic, _) => {
         topicButtons.push({
             topic_id: topic_id,
@@ -13,10 +11,8 @@ function initTopicButtonData(topic_id: string, topics: any[]) {
             short_description: topic.short_description,
         });
     });
-
     return topicButtons;
 }
-
 export default async function TopicsPage(params: any) {
     const searchParams = params.searchParams;
     const res = await fetchAnyAvailSession('topics',{'topic_id': searchParams.topic_id});
