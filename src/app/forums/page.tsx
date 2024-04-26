@@ -1,7 +1,7 @@
 import { fetchAnyAvailSession } from "@/app/actions";
 import Navbar from '@/app/components/navbar';
-import TopicButton from '../components/topic_button';
-import { TopicTable } from "../components/topics_table";
+import TopicButton from '@/app/components/topic_button';
+import { TopicTable } from "@/app/components/topics_table";
 
 export default async function Forums(params: any) {
   const res = await fetchAnyAvailSession('forums', params.searchParams);
