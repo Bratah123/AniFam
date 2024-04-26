@@ -1,12 +1,10 @@
 import { fetchAnyAvailSession } from "@/app/actions";
 import Navbar from '@/app/components/navbar';
 import TopicButton from '../components/topic_button';
-import TopicCard from "../components/topic_card";
 import { TopicTable } from "../components/topics_table";
 
 export default async function Forums(params: any) {
   const res = await fetchAnyAvailSession('forums', params.searchParams);
-
   return (
     <div className="flex flex-col h-screen relative bg-slate-1000 bg-[url(/album_collage_1080.jpg)] bg-cover bg-center bg-no-repeat opacity-85">
       <Navbar isAdmin={res?.is_admin} onHome={false} onForums={true} onAdmin={false} />
