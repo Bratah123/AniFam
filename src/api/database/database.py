@@ -91,12 +91,6 @@ class AniFamDatabase:
     def __exit__(self, exc_type, exc_value, traceback):
         self.con.close()
     
-    def execute(self, query, params=None):
-        cursor = self.con.cursor()
-        cursor.execute(query, params or ())
-        self.con.commit()
-        return cursor
-
     def fetch_user(self, username: str) -> tuple[str, str] | None:
         """
             Fetches a user from the database by username.
@@ -152,8 +146,6 @@ class AniFamDatabase:
             results.append(user_dict)
 
         return results
-    
-
     
     # This is for first time inputing in a new anime into the database
     def save_anime(self, anime_data):

@@ -34,7 +34,6 @@ def init_db():
         "CREATE TABLE IF NOT EXISTS topics (topic_id INTEGER PRIMARY KEY, \
             title TEXT, long_description TEXT, short_description TEXT)"
     )
-    
 
     # Anime table
     # image TEXT: this contains a URL from cdn.myanimelist.net likely scraped from the website
