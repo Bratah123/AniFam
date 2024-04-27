@@ -177,19 +177,23 @@ def media_page() -> tuple[Response, int]:
     
     return jsonify(logged_in_as=user, is_admin=user_is_admin, episodes=episodes), 200
 
-@app.route("/topic", methods=["GET"])
+@app.route("/topicpage", methods=["GET"])
 @jwt_required()
-def topic_page():
-    topic_id = request.args.get("topic_id")
-    if not topic_id:
-        return jsonify(message="Topic ID not provided", status=400)
+def topic_page() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    topic_title = request.args.get("title")
+
+    if not topic_title:
+        return jsonify(logged_in_as=user,is_admin=user_is_admin, message="Topic title not provided", status=400)
     
     with AniFamDatabase() as db:
-        topic = db.fetch_topic_by_id(topic_id)
-        if not topic:
-            return jsonify(message="Topic does not exist", status=404)
-        
-        return jsonify(topic=topic), 200
+        topic = db.fetch_topic(topic_title)
+    
+    if not topic:
+        return jsonify(logged_in_as=user, message="Topic does not exist", status=404)
+    
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, topic=topic), 200
 
 @app.route("/users", methods=["GET"])
 @jwt_required()
@@ -209,12 +213,20 @@ def get_users() -> tuple[Response, int]:
 def forums() -> tuple[Response, int]:
     user = get_jwt_identity()
     user_is_admin = get_jwt()["is_admin"]
-    topics = [ # Dummy data
-        { 'id': 1, 'title': 'Announcements & Updates', 'long_description': 'Any changes and additions to AniFam!', 'short_description': 'Updates'},
-        { 'id': 2, 'title': 'Favorite Anime of 2023', 'long_description': 'Share your top picks!', 'short_description': 'Favorites'},
-        { 'id': 3, 'title': 'Anime Recommendations', 'long_description': 'Looking for something new?', 'short_description': 'Recommendations'},
-    ]
-    return jsonify(logged_in_as=user, is_admin=user_is_admin, topics=topics), 200
+    topics = []
+    with AniFamDatabase() as db:
+        topics = db.fetch_all_topics()
+
+    if topics:
+        topics_info = [{
+            "topic_id": topic.topic_id,
+            "title": topic.title,
+            "long_description": topic.long_description,
+            "short_description": topic.short_description
+        } for topic in topics]
+        return jsonify(logged_in_as=user, is_admin=user_is_admin, topics=topics_info), 200
+    else:
+        return jsonify(logged_in_as=user, is_admin=user_is_admin, message="No topics found"), 404
 
 @app.route("/forums/upload", methods=["POST"])
 @jwt_required()
