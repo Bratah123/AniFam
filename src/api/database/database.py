@@ -45,6 +45,20 @@ class AnimeData:
         self.episodes = data[7].split(',')
         self.total_episodes = int(data[9])
         return self
+    
+class TopicData:
+    def __init__(self) -> None:
+        self.topic_id = 0
+        self.title = ''
+        self.long_description = ''
+        self.short_description = ''
+        
+    def load(self, data: tuple) -> None:
+        self.topic_id = int(data[0])
+        self.title = data[1]
+        self.long_description = data[2]
+        self.short_description = data[3]
+        return self
 
 class AniFamDatabase:
     """
@@ -75,7 +89,7 @@ class AniFamDatabase:
             date_edited datetime
             total_episodes INTEGER : This keeps track of how many episodes total the anime SHOULD have not how many are available.
         topics:
-            topicId INTEGER PRIMARY KEY
+            topic_id INTEGER PRIMARY KEY
             title TEXT
             long_description TEXT
             short_description TEXT
@@ -113,18 +127,38 @@ class AniFamDatabase:
             return None
         return cursor.fetchone()
 
-    def fetch_topic_by_id(self, topic_id: int) -> tuple[str, str, str] | None:
+    def fetch_topic(self, title: str) -> TopicData | None:
         cursor = self.con.cursor()
         try:
             cursor.execute(
-                "SELECT * FROM topics WHERE topic_id=?",
-                (topic_id,)
+                "SELECT * FROM topics WHERE title=?",
+                (title,)
             )
         except sqlite3.OperationalError as e:
-            log.error("Error fetching topic by ID: %s", e)
+            log.error("Error fetching topic: %s", e)
             return None
-        return cursor.fetchone()
+        topic = cursor.fetchone()
+        if not topic:
+            return None
+        topic_data = TopicData()
+        topic_data.load(topic)
+        return topic_data
     
+    def fetch_all_topics(self) -> list[TopicData] | None:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute("SELECT * FROM topics")
+        except sqlite3.OperationalError as e:
+            log.error("Error fetching all topics: %s", e)
+            return None
+        topics = cursor.fetchall()
+        if not topics:
+            return []
+        topic_data = []
+        for topic in topics:
+            topic_data.append(TopicData().load(topic))
+        return topic_data
+     
     def fetch_all_users(self) -> list[dict[str, str] | None]:
         """Fetch all users
 
