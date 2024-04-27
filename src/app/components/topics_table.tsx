@@ -1,4 +1,4 @@
-// 'use client';
+'use client';
 import TopicCard from '@/app/components/topic_card';
 
 export interface Topic {
@@ -7,14 +7,16 @@ export interface Topic {
   long_description: string;
   short_description: string;
 }
+
 interface Props {
   topicList: Topic[];
 }
-export function TopicTable({ topicList }: Props) {
+
+export function TopicTable({ topicList = [] }: Props) {
   return (
-    <div className="flex flex-wrap justify-center gap-4 p-8 bg-cyan-400 text-white hover:bg-cyan-500 cursor-pointer">
+    <div className="flex flex-wrap justify-center gap-4 mt-[-1rem] p-8 bg-transparent text-white hover:bg-transparent cursor-pointer w-full">
       {topicList.map((topic, index) => (
-        <div key={index} className="flex flex-col items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-4 bg-white text-black rounded-lg shadow-md">
+        <div key={index} className="flex flex-col items-center w-full p-4 bg-cyan-700 text-black rounded-lg shadow-md">
           <TopicCard
             topic_id={topic.topic_id}
             title={topic.title}
@@ -26,5 +28,3 @@ export function TopicTable({ topicList }: Props) {
     </div>
   );
 }
-
-
