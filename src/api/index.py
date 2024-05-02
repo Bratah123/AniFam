@@ -138,22 +138,31 @@ def home_page() -> tuple[Response, int]:
     user = get_jwt_identity()
     is_admin = get_jwt()["is_admin"]
 
-    hottest_hits = []
+    animes = None
+    search_query = request.args.get("search")
+    
+    if search_query:
+        with AniFamDatabase() as db:
+            animes = db.query_animes_by_name_inclusive(search_query)
+    else:
+        with AniFamDatabase() as db:
+            animes = db.fetch_top_rated_animes(20)
 
-    with AniFamDatabase() as db:
-        animes = db.fetch_top_rated_animes(20)
-        hottest_hits = [
-            {
-                "title": anime.title,
-                "available_episodes": len(anime.episodes),
-                "total_episodes": anime.total_episodes,
-                "rating": anime.rating,
-                "synopsis": anime.synopsis,
-                "genres": anime.genre,
-                "image": anime.image,
-                "episodes": anime.episodes
-            } for anime in animes
-        ]
+    if not animes:
+        return jsonify(logged_in_as=user, message="No animes found", status=404, hottest_hits=[], is_admin=is_admin)
+    
+    hottest_hits = [
+        {
+            "title": anime.title,
+            "available_episodes": len(anime.episodes),
+            "total_episodes": anime.total_episodes,
+            "rating": anime.rating,
+            "synopsis": anime.synopsis,
+            "genres": anime.genre,
+            "image": anime.image,
+            "episodes": anime.episodes
+        } for anime in animes
+    ]
 
     return jsonify(logged_in_as=user, hottest_hits=hottest_hits, is_admin=is_admin)
 

@@ -396,3 +396,21 @@ class AniFamDatabase:
             return False
         self.con.commit()
         return True
+    
+    def query_animes_by_name_inclusive(self, title: str, limit=20) -> list[AnimeData] | None:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "SELECT * FROM animes WHERE title LIKE ? LIMIT ?",
+                (f"%{title}%", limit)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error querying animes by name inclusive: %s", e)
+            return None
+        animes = cursor.fetchall()
+        if not animes:
+            return []
+        anime_data = []
+        for anime in animes:
+            anime_data.append(AnimeData().load(anime))
+        return anime_data

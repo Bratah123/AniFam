@@ -24,8 +24,6 @@ export default function AnimeCard({
   genres,
 }: AnimeCardProp) {
   let episode = episodes.length == 0 ? 0 : episodes[0];
-  console.log('Episode:', episode);
-  console.log(episodes)
   return (
     <div className="relative">
       <AnimeToolTip
