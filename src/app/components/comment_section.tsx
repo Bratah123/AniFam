@@ -1,4 +1,6 @@
 'use client';
+import { MediaComment } from '@/app/components/media_comment';
+
 /*
 * CSS taken from https://flowbite.com/blocks/publisher/comments/ and modified to fit the project
 */
@@ -20,6 +22,7 @@ export function CommentSection() {
                     Post comment
                 </button>
             </form>
+            <MediaComment user='admin' comment='Oh cmon, I was really excited to watch Bocchi the Rock!! too...' date='May 2, 2024' replies={[]}/>
         </div>
     );
 }
