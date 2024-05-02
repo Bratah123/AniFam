@@ -216,7 +216,10 @@ def forums() -> tuple[Response, int]:
     topics = []
     with AniFamDatabase() as db:
         topics = db.fetch_all_topics()
-
+    
+    if topics is None:
+        return jsonify(logged_in_as=user, message="No topics found"), 404
+    
     if topics:
         topics_info = [{
             "topic_id": topic.topic_id,
@@ -224,9 +227,10 @@ def forums() -> tuple[Response, int]:
             "long_description": topic.long_description,
             "short_description": topic.short_description
         } for topic in topics]
+
         return jsonify(logged_in_as=user, is_admin=user_is_admin, topics=topics_info), 200
-    else:
-        return jsonify(logged_in_as=user, is_admin=user_is_admin, message="No topics found"), 404
+    
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, topics=topics), 200
 
 @app.route("/forums/upload", methods=["POST"])
 @jwt_required()
