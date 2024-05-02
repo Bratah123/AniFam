@@ -10,6 +10,7 @@ type InputProp = {
     min?: number;
     max?: number;
     accept?: string;
+    onFocus?: () => void;
 };
 export default function InputField(prop: InputProp) {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +34,7 @@ export default function InputField(prop: InputProp) {
                 min={prop.min}
                 max={prop.max}
                 accept={prop.accept}
+                onFocus={prop.onFocus}
             />
         </div>
     );
