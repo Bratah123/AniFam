@@ -37,6 +37,8 @@ export default async function MediaPage(params: any) {
     const episode = searchParams.episode;
     const animeName = searchParams.animeName;
     const episodeButtonData = initEpisodeButtonData(animeName, episodes);
+    
+    console.log(episodes)
 
     return (
         <div>

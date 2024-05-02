@@ -12,6 +12,7 @@ export default async function Admin() {
                 <h1 className="text-3xl font-bold text-center text-white">Admin Tools</h1>
                 <div className="flex justify-between">
                     <LinkButton text="Upload Anime" link="/admin/upload"/>
+                    <LinkButton text="Delete Episode" link="/admin/delete"/>
                 </div>
             </div>
         </div>

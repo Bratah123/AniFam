@@ -67,7 +67,6 @@ def init_db():
         )
         print("Created guest account!")
 
-    # TODO: Complete the database schema
     con.commit()
     con.close()
     print("Done initializing database!")

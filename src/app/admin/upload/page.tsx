@@ -4,7 +4,7 @@ import InputField from "@/app/components/input_field";
 import {FormEvent, useState} from "react";
 import {uploadAnime} from "@/app/actions";
 
-export default function Admin() {
+export default function AdminUpload() {
     const [title, setTitle] = useState('');
     const [episode, setEpisode] = useState('1');
     const [synopsis, setSynopsis] = useState('');

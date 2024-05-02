@@ -139,7 +139,7 @@ def home_page() -> tuple[Response, int]:
     is_admin = get_jwt()["is_admin"]
 
     hottest_hits = []
-    # TODO: Add logic for animes loading
+
     with AniFamDatabase() as db:
         animes = db.fetch_top_rated_animes(20)
         hottest_hits = [
@@ -174,6 +174,9 @@ def media_page() -> tuple[Response, int]:
     
     if not episodes:
         return jsonify(logged_in_as=user, message="Anime does not exist", status=404)
+    
+    if episodes[0] == '':
+        episodes = []
     
     return jsonify(logged_in_as=user, is_admin=user_is_admin, episodes=episodes), 200
 
@@ -307,6 +310,49 @@ def anime_upload() -> tuple[Response, int]:
     except Exception as e:
         log.error("Error saving file: %s", e)
         return jsonify(logged_in_as=user, message="Error saving file", status=500)
+
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200)
+
+@app.route("/admin/delete", methods=["DELETE"])
+@jwt_required()
+def delete_anime() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    request_form = request.form
+
+    if not user_is_admin:
+        return jsonify(logged_in_as=user, message="You are not authorized to access this route"), 401
+
+    anime_name = request_form.get("title")
+    episode_number = request_form.get("episode")
+
+    if not anime_name or not episode_number:
+        return jsonify(logged_in_as=user, message="Anime name or episode number not provided", status=400)
+
+    with AniFamDatabase() as db:
+        anime = db.fetch_anime(anime_name)
+        if not anime:
+            return jsonify(logged_in_as=user, message="Anime does not exist", status=404)
+        if episode_number not in anime.episodes:
+            return jsonify(logged_in_as=user, message="Episode does not exist", status=404)
+        
+    # Delete the episode from the static folder
+    anime_folder_name = anime_name
+    anime_file_name = f"E{episode_number}.mp4"
+    if os.path.exists(os.path.join(app.static_folder, anime_folder_name, anime_file_name)):
+        try:
+            log.info("Deleting episode %s from anime %s", episode_number, anime_name)
+            os.remove(os.path.join(app.static_folder, anime_folder_name, anime_file_name))
+        except Exception as e:
+            log.error("Error deleting file: %s", e)
+            return jsonify(logged_in_as=user, message="Error deleting file", status=500)
+    else:
+        return jsonify(logged_in_as=user, message="Episode does not exist", status=404)
+    
+    with AniFamDatabase() as db:
+        result = db.delete_anime_episode(anime_name, episode_number)
+        if not result:
+            return jsonify(logged_in_as=user, message="Error deleting episode", status=500)
 
     return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200)
 

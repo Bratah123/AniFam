@@ -44,6 +44,10 @@ class AnimeData:
         self.genre = data[6].split(',')
         self.episodes = data[7].split(',')
         self.total_episodes = int(data[9])
+
+        if self.episodes[0] == '':
+            self.episodes = []
+            
         return self
     
 class TopicData:
@@ -257,7 +261,7 @@ class AniFamDatabase:
         cursor = self.con.cursor()
         try:
             cursor.execute(
-                "SELECT * FROM animes WHERE title=?",
+                "SELECT * FROM animes WHERE title LIKE ?",
                 (title,)
             )
         except sqlite3.OperationalError as e:
@@ -269,6 +273,26 @@ class AniFamDatabase:
         anime_data = AnimeData()
         anime_data.load(anime)
         return anime_data
+    
+    def delete_anime_episode(self, title: str, episode: str) -> bool:
+        anime = self.fetch_anime(title)
+        if not anime:
+            return False
+        episodes = anime.episodes
+        if episode in episodes:
+            episodes.remove(episode)
+            episodes = ','.join(episodes)
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "UPDATE animes SET episodes=? WHERE title LIKE ?",
+                (episodes, title)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error deleting anime episode: %s", e)
+            return False
+        self.con.commit()
+        return True
     
     def fetch_top_rated_animes(self, limit: int) -> list[AnimeData]:
         cursor = self.con.cursor()

@@ -23,6 +23,9 @@ export default function AnimeCard({
   rating,
   genres,
 }: AnimeCardProp) {
+  let episode = episodes.length == 0 ? 0 : episodes[0];
+  console.log('Episode:', episode);
+  console.log(episodes)
   return (
     <div className="relative">
       <AnimeToolTip
@@ -38,7 +41,7 @@ export default function AnimeCard({
             pathname: '/media',
             query: {
               animeName: title,
-              episode: episodes[0],
+              episode: episode,
             },
           }}
           className="flex flex-col text-center hover:cursor-pointer hover:bg-gray-700"

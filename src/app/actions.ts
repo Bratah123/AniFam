@@ -200,6 +200,27 @@ export async function uploadAnime(data: FormData) {
       return error;
   }
 }
+
+export async function deleteAnimeEpisode(data: FormData) {
+  const jwt = cookies().get('access_token');
+  let result: Response;
+  try {
+      result = await fetch('http://127.0.0.1:5328/admin/delete', {
+          method: 'DELETE',
+          body: data,
+          cache: 'no-cache',
+          credentials: 'include',
+          headers: {
+              Authorization: `Bearer ${jwt?.value}`,
+          },
+      });
+      return await result.json();
+  } catch (error) {
+      console.log(error);
+      return error;
+  }
+}
+
 export async function uploadForumTopic(title: string, long_description: string, short_description: string) {
     const jwt = cookies().get('access_token');
     let result: Response;
