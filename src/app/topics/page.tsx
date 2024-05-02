@@ -1,6 +1,6 @@
 import Navbar from '@/app/components/navbar';
 import { fetchAnyAvailSession } from '@/app/actions';
-import { CommentSection } from '@/app/components/comment_section';
+import { TopicCommentSection } from '@/app/components/topic_comment_section';
 import TopicPageLayout from '@/app/components/topic_page_layout'; 
 
 export default async function TopicPage(params: any) {
@@ -17,7 +17,7 @@ export default async function TopicPage(params: any) {
             <Navbar isAdmin={res.is_admin} onHome={false} onAdmin={false} onForums={true} />
             <br></br>
             <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} />
-            <CommentSection />
+            <TopicCommentSection/>
         </div>
     );
 }
