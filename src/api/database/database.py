@@ -47,7 +47,7 @@ class AnimeData:
 
         if self.episodes[0] == '':
             self.episodes = []
-            
+
         return self
     
 class TopicData:
@@ -377,9 +377,22 @@ class AniFamDatabase:
         self.con.commit()
         return True
     
-
-
-
-
-    
-    
+    def update_anime_episode(self, title: str, episode: str) -> bool:
+        anime = self.fetch_anime(title)
+        if not anime:
+            return False
+        episodes = anime.episodes
+        if episode not in episodes:
+            episodes.append(episode)
+            episodes = ','.join(episodes)
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "UPDATE animes SET episodes=? WHERE title LIKE ?",
+                (episodes, title)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error updating anime episode: %s", e)
+            return False
+        self.con.commit()
+        return True

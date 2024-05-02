@@ -313,6 +313,52 @@ def anime_upload() -> tuple[Response, int]:
 
     return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200)
 
+@app.route("/admin/upload_episode", methods=["POST"])
+@jwt_required()
+def upload_episode() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    if not user_is_admin:
+        return jsonify(logged_in_as=user, message="You are not authorized to access this route"), 401
+
+    form_data = request.form
+    anime_name = form_data["title"]
+    episode_number = form_data["episode"]
+
+    with AniFamDatabase() as db:
+        anime = db.fetch_anime(anime_name)
+        if not anime:
+            return jsonify(logged_in_as=user, message="Anime does not exist", status=404)
+        if episode_number in anime.episodes:
+            return jsonify(logged_in_as=user, message="Episode already exists", status=409)
+    
+    anime_episode_file = request.files['file']
+    anime_file_name = f"E{episode_number}.mp4"
+    anime_folder_name = anime_name
+
+    # Add the episode to the static folder
+    if not os.path.exists(os.path.join(app.static_folder, anime_folder_name)):
+        log.info("Creating folder for anime %s", anime_folder_name)
+        try:
+            os.makedirs(os.path.join(app.static_folder, anime_folder_name))
+        except Exception as e:
+            log.error("Error creating folder: %s", e)
+            return jsonify(logged_in_as=user, message="Error creating folder", status=500)
+        
+    try:
+        anime_episode_file.save(os.path.join(app.static_folder, anime_folder_name, anime_file_name))
+    except Exception as e:
+        log.error("Error saving file: %s", e)
+        return jsonify(logged_in_as=user, message="Error saving file", status=500)
+    
+    with AniFamDatabase() as db:
+        result = db.update_anime_episode(anime_name, episode_number)
+        if not result:
+            return jsonify(logged_in_as=user, message="Error saving episode to database", status=500)
+        
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200)
+
+    
 @app.route("/admin/delete", methods=["DELETE"])
 @jwt_required()
 def delete_anime() -> tuple[Response, int]:

@@ -201,6 +201,26 @@ export async function uploadAnime(data: FormData) {
   }
 }
 
+export async function uploadAnimeEpisode(data: FormData) {
+    const jwt = cookies().get('access_token');
+    let result: Response;
+    try {
+        result = await fetch('http://127.0.0.1:5328/admin/upload_episode', {
+            method: 'POST',
+            body: data,
+            cache: 'no-cache',
+            credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${jwt?.value}`,
+            },
+        });
+        return await result.json();
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
+
 export async function deleteAnimeEpisode(data: FormData) {
   const jwt = cookies().get('access_token');
   let result: Response;
