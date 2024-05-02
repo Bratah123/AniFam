@@ -73,7 +73,7 @@ export default async function MediaPage(params: any) {
                       </h2>
                       <Image
                         src="/anya_scared.jpg"
-                        alt="Scared Bocchi"
+                        alt="Anya Scared"
                         width={960}
                         height={540}
                       />
