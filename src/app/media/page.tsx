@@ -4,6 +4,7 @@ import AnimePlayer from '@/app/components/anime_player';
 import Divider from '@/app/components/divider';
 import EpisodeButton from '@/app/components/episode_button';
 import { CommentSection } from '@/app/components/comment_section';
+import Image from 'next/image';
 
 function initEpisodeButtonData(animeName: string, episodes: string[]) {
     const episodeNavButtons: any[] = [];
@@ -38,8 +39,6 @@ export default async function MediaPage(params: any) {
     const animeName = searchParams.animeName;
     const episodeButtonData = initEpisodeButtonData(animeName, episodes);
     
-    console.log(episodes)
-
     return (
         <div>
             <Navbar isAdmin={result.is_admin} onHome={false} onAdmin={false} onForums={false} />
@@ -64,7 +63,25 @@ export default async function MediaPage(params: any) {
                         ))}
                     </div>
                 </div>
-                <AnimePlayer videoPath={`http://${VIDEO_SERVER_IP}:5328/static/${animeName}/E${episode}.mp4`}/>
+                {episode === '0' ? (
+                    <>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="text-center text-2xl font-bold text-slate-100">
+                        Sorry, no episodes found for this anime yet.
+                        <br />
+                        Please try again later!
+                      </h2>
+                      <Image
+                        src="/anya_scared.jpg"
+                        alt="Scared Bocchi"
+                        width={960}
+                        height={540}
+                      />
+                    </div>
+                  </>
+                ) : (
+                    <AnimePlayer videoPath={`http://${VIDEO_SERVER_IP}:5328/static/${animeName}/E${episode}.mp4`}/>
+                )}
             </div>
             <CommentSection />
         </div>
