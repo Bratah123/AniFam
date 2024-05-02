@@ -1,27 +1,23 @@
 import Navbar from '@/app/components/navbar';
 import { fetchAnyAvailSession } from '@/app/actions';
 import { CommentSection } from '@/app/components/comment_section';
-
+import TopicPageLayout from '@/app/components/topic_page_layout'; 
 
 export default async function TopicPage(params: any) {
+    console.log("Received params:", params);  // Debug log for incoming parameters
     const searchParams = params.searchParams;
 
-    const res = await fetchAnyAvailSession('topicpage', {'title': searchParams.title});
+    const res = await fetchAnyAvailSession('topicpage', {'title': searchParams.topic_title});
+    console.log("Response from server:", res);  // Debug log for server response
+
+    const { title, long_description, short_description } = res.topic || { title: 'Title Not Found', long_description: 'Description not available', short_description: '' };
 
     return (
         <div>
-            <Navbar isAdmin={res.is_admin} onHome={false} onAdmin={false} onForums={false} />
+            <Navbar isAdmin={res.is_admin} onHome={false} onAdmin={false} onForums={true} />
             <br></br>
-            <div className="flex flex-col h-screen relative bg-slate-1000 bg-[url(/album_collage_1080.jpg)] bg-cover bg-center bg-no-repeat opacity-85">
-            <div className="py-4 px-4 bg-black bg-opacity-80 relative">
-                <h1 className="text-5xl font-bold text-white text-center mb-4">Ani x Family Topics</h1>
-            </div>
-            <div className="flex-grow relative">
-                <div className="grid grid-cols-1 gap-4 p-4">  
-                </div>
-            </div>
-        </div>
-        <CommentSection/>
+            <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} />
+            <CommentSection />
         </div>
     );
 }
