@@ -12,6 +12,8 @@ export default function AdminUploadEpisode() {
     // Add another attribute that will store the video file with type File
     const [videoFile, setVideoFile] = useState<File | null>(null);
 
+    const [focusedDescription, setFocusedDescription] = useState('');
+
     async function onUpload(event : FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const formData = new FormData();
@@ -26,31 +28,45 @@ export default function AdminUploadEpisode() {
             alert(data.message);
         }
     }
+
+    function onTitleFocus() {
+        setFocusedDescription('Title: provide the name of an anime that currently exists in the Ani x Family database (Non-case sensitive).');
+    }
+
+    function onEpisodeFocus() {
+        setFocusedDescription('Episode: provide the episode number of the anime episode you are uploading.');
+    }
+
     return (
         <div
             className="h-screen bg-gradient-to-t from-black from-10% via-slate-800 via-40% to-sky-950 to-90% bg-scroll space-y-6">
             <Navbar isAdmin={true} onAdmin={true} onHome={false} onForums={false}/>
             <h1 className="text-3xl font-bold text-center text-white">Upload Anime Episode (To Existing Animes)</h1>
             <form onSubmit={onUpload} className="mx-auto max-w-screen-md rounded-lg bg-gray-950 px-5 py-8 shadow-lg md:px-10 ">
-                <InputField label="Title" placeholder="Anime title" value={title} type="text" required={true}
-                            onChange={(e) => setTitle(e.target.value)}/>
-                <br></br>
-                <InputField label="Episode" placeholder="Episode number" value={episode} type="number" required={true}
-                            min={1} max={99999} onChange={(e) => setEpisode(e.target.value)}/>
-                <br></br>
-                <InputField label="Video File (spy.mp4)" placeholder="Upload Video" value={file} type="file" required={true} accept="video/mp4"
-                            onChange={
-                                (e) => {
-                                    setFile(e.target.value)
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                        setVideoFile(file);
-                                    }
-                                }}/>
-                <button
-                    className="my-8 rounded bg-indigo-700 px-8 py-2 text-sm text-white transition duration-150 ease-in-out hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-offset-2">
-                    Upload
-                </button>
+            <div className='flex'>
+                    <div className='flex flex-col'>
+                        <InputField label="Title" placeholder="Anime title" value={title} type="text" required={true} onFocus={onTitleFocus}
+                                    onChange={(e) => setTitle(e.target.value)}/>
+                        <br></br>
+                        <InputField label="Episode" placeholder="Episode number" value={episode} type="number" required={true} onFocus={onEpisodeFocus}
+                                    min={1} max={99999} onChange={(e) => setEpisode(e.target.value)}/>
+                        <br></br>
+                        <InputField label="Video File (spy.mp4)" placeholder="Upload Video" value={file} type="file" required={true} accept="video/mp4"
+                                    onChange={
+                                        (e) => {
+                                            setFile(e.target.value)
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                setVideoFile(file);
+                                            }
+                                        }}/>
+                        <button
+                            className="my-8 rounded bg-indigo-700 px-8 py-2 text-sm text-white transition duration-150 ease-in-out hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-offset-2">
+                            Upload
+                        </button>
+                    </div>
+                    <h1 className='text-2xl text-center text-white'>{focusedDescription}</h1>
+                </div>
             </form>
         </div>
     );
