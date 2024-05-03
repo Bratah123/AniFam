@@ -27,13 +27,13 @@ export function CommentSection(commentSectionProps: CommentSectionProps) {
             alert('Comment posted successfully');
             // Clear the comment box
             setComment('');
-            // Update the comments
-            setComments([...comments, {
+            // Update the comments and add to the top of the list
+            setComments([{
                 user: commentSectionProps.user,
                 comment: comment,
-                date: new Date().toDateString(),
+                date: new Date().toISOString(),
                 replies: [],
-            }]);
+            }, ...comments]);
         } else {
             alert(res.message);
         }
