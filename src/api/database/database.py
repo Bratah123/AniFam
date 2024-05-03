@@ -417,7 +417,6 @@ class AniFamDatabase:
     
     def fetch_comments(self, anime_name: str, anime_episode: str) -> list | None:
         cursor = self.con.cursor()
-        print(anime_episode)
         try:
             cursor.execute(
                 "SELECT * FROM anime_comments WHERE anime_title LIKE ? AND anime_episode=? ORDER BY date DESC",
