@@ -16,6 +16,8 @@ export interface CommentSectionProps {
 
 export function CommentSection(commentSectionProps: CommentSectionProps) {
     const [comment, setComment] = useState('');
+    const [comments, setComments] = useState(commentSectionProps.comments);
+
     let amountOfComments = commentSectionProps.comments.length;
 
     async function onCommentSubmit(event: FormEvent<HTMLFormElement>) {
@@ -23,6 +25,15 @@ export function CommentSection(commentSectionProps: CommentSectionProps) {
         const res = await uploadComment(commentSectionProps.animeName, commentSectionProps.episode, comment);
         if (res.status === 200) {
             alert('Comment posted successfully');
+            // Clear the comment box
+            setComment('');
+            // Update the comments
+            setComments([...comments, {
+                user: commentSectionProps.user,
+                comment: comment,
+                date: new Date().toDateString(),
+                replies: [],
+            }]);
         } else {
             alert(res.message);
         }
@@ -50,7 +61,7 @@ export function CommentSection(commentSectionProps: CommentSectionProps) {
                     Post comment
                 </button>
             </form>
-            {commentSectionProps.comments.map((comment, index) => (
+            {comments.map((comment, index) => (
                 <MediaComment key={index} user={comment.user} comment={comment.comment} date={comment.date} replies={comment.replies} />
             ))}
         </div>

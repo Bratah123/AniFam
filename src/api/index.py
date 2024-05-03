@@ -471,7 +471,7 @@ def upload_comment() -> tuple[Response, int]:
         result = db.save_comment(user, anime_name, episode_number, comment)
         if not result:
             return jsonify(logged_in_as=user, message="Error saving comment", status=500), 500
-    
+
     return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200), 200
 
 def main(): # Entry point of flask server
