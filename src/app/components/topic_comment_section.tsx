@@ -19,8 +19,6 @@ export function TopicCommentSection(commentSectionProps: TopicCommentSectionProp
         event.preventDefault();
         const res = await uploadTopicComment(commentSectionProps.topic_title, comment);
         if (res.status === 200) {
-            alert('Comment posted successfully');
-            // Clear the comment box
             setComment('');
             // Update the comments and add to the top of the list
             setComments([{
