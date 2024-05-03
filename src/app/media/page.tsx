@@ -5,7 +5,7 @@ import Divider from '@/app/components/divider';
 import EpisodeButton from '@/app/components/episode_button';
 import { CommentSection } from '@/app/components/comment_section';
 import Image from 'next/image';
-import { MediaCommentProps } from '../components/media_comment';
+import { MediaCommentProps } from '@/app/components/media_comment';
 
 function initEpisodeButtonData(animeName: string, episodes: string[]) {
     const episodeNavButtons: any[] = [];
@@ -41,10 +41,10 @@ function commentDataToMediaCommentProps(commentData: any[]) {
 
     commentData.forEach((comment, _) => {
         mediaCommentPropsList.push({
-            user: comment.user,
-            comment: comment.comment,
-            date: comment.date,
-            replies: comment.replies,
+            user: comment[3],
+            comment: comment[4],
+            date: comment[5],
+            replies: comment[6],
         });
     });
 
@@ -59,9 +59,10 @@ const VIDEO_SERVER_IP = '127.0.0.1';
 export default async function MediaPage(params: any) {
     const searchParams = params.searchParams;
 
-    const result = await fetchAnyAvailSession('mediapage', {'animeName': searchParams.animeName});
+    const result = await fetchAnyAvailSession('mediapage', {'animeName': searchParams.animeName, 'episode': searchParams.episode});
     const episodes = result.episodes;
     const comments = result.comments;
+    const user = result.logged_in_as;
 
     const episode = searchParams.episode;
     const animeName = searchParams.animeName;
@@ -113,7 +114,7 @@ export default async function MediaPage(params: any) {
                     <AnimePlayer videoPath={`http://${VIDEO_SERVER_IP}:5328/static/${animeName}/E${episode}.mp4`}/>
                 )}
             </div>
-            <CommentSection comments={commentsProps}/>
+            <CommentSection comments={commentsProps} user={user} animeName={animeName} episode={episode}/>
         </div>
     );
 }

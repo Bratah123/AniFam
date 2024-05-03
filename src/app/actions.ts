@@ -264,3 +264,28 @@ export async function uploadForumTopic(title: string, long_description: string, 
         return error;
     }
 }
+
+export async function uploadComment(animeName: string, animeEpisode: string, comment: string) {
+    const jwt = cookies().get('access_token');
+    let result: Response;
+    let form = new FormData();
+    form.append('animeName', animeName);
+    form.append('animeEpisode', animeEpisode);
+    form.append('comment', comment);
+    try {
+        result = await fetch('http://127.0.0.1:5328/comment/upload', {
+            method: 'POST',
+            body: form,
+            cache: 'no-cache',
+            credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${jwt?.value}`,
+            },
+        });
+        return await result.json();
+    }
+    catch (error) {
+        console.log(error);
+        return error;
+    }
+}

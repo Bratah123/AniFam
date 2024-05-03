@@ -172,6 +172,7 @@ def media_page() -> tuple[Response, int]:
     user = get_jwt_identity()
     user_is_admin = get_jwt()["is_admin"]
     anime_name = request.args.get("animeName")
+    episode = request.args.get("episode")
 
     episodes = []
     comments = []
@@ -187,23 +188,9 @@ def media_page() -> tuple[Response, int]:
     
     if episodes[0] == '':
         episodes = []
-
-    # TODO: Find comments for the anime
-    # Mock Data
-    comments = [
-        {
-            "user": "Tung",
-            "comment": "I agree with Brandon!",
-            "date": "2023-10-10",
-            "replies": []
-        },
-        {
-            "user": "Brandon",
-            "comment": "Bocchi the Rock! is peak fiction, you have to watch it once episodes on here exist!",
-            "date": "2023-10-10",
-            "replies": []
-        },
-    ]
+    
+    with AniFamDatabase() as db:
+        comments = db.fetch_comments(anime_name, episode)
     
     return jsonify(logged_in_as=user, is_admin=user_is_admin, episodes=episodes, comments=comments), 200
 
@@ -462,6 +449,30 @@ def delete_anime() -> tuple[Response, int]:
             return jsonify(logged_in_as=user, message="Error deleting episode", status=500)
 
     return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200)
+
+# This is the route for comments on anime NOT to be confused with the forums
+@app.route("/comment/upload", methods=["POST"])
+@jwt_required()
+def upload_comment() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    form_data = request.form
+
+    anime_name = form_data["animeName"]
+    episode_number = form_data["animeEpisode"]
+    comment = form_data["comment"]
+
+    with AniFamDatabase() as db:
+        anime = db.fetch_anime(anime_name)
+        if not anime:
+            return jsonify(logged_in_as=user, message="Anime does not exist", status=404), 404
+        if episode_number not in anime.episodes:
+            return jsonify(logged_in_as=user, message="Episode does not exist", status=404), 404
+        result = db.save_comment(user, anime_name, episode_number, comment)
+        if not result:
+            return jsonify(logged_in_as=user, message="Error saving comment", status=500), 500
+    
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200), 200
 
 def main(): # Entry point of flask server
     cli_arguments = sys.argv

@@ -414,3 +414,32 @@ class AniFamDatabase:
         for anime in animes:
             anime_data.append(AnimeData().load(anime))
         return anime_data
+    
+    def fetch_comments(self, anime_name: str, anime_episode: str) -> list | None:
+        cursor = self.con.cursor()
+        print(anime_episode)
+        try:
+            cursor.execute(
+                "SELECT * FROM anime_comments WHERE anime_title LIKE ? AND anime_episode=? ORDER BY date DESC",
+                (anime_name, anime_episode)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error fetching comments: %s", e)
+            return None
+        comments = cursor.fetchall()
+        if not comments:
+            return []
+        return comments
+
+    def save_comment(self, username: str, anime_name: str, anime_episode: str, comment: str) -> bool:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO anime_comments (user, anime_title, anime_episode, comment, date) VALUES (?, ?, ?, ?, datetime('now'))",
+                (username, anime_name, anime_episode, comment)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error saving comment: %s", e)
+            return False
+        self.con.commit()
+        return True
