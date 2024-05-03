@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import TopicCard from '@/app/components/topic_card';
 
 export interface Topic {
@@ -13,9 +14,15 @@ interface Props {
 }
 
 export function TopicTable({ topicList = [] }: Props) {
+  const [reversedTopics, setReversedTopics] = useState<Topic[]>([]);
+  useEffect(() => {
+    // Set the reversed topics only once on component mount
+    setReversedTopics([...topicList].reverse());
+  }, [topicList]); 
+  
   return (
     <div className="flex flex-wrap justify-center gap-4 mt-[-1rem] p-8 bg-transparent text-white hover:bg-transparent cursor-pointer w-full">
-      {topicList.map((topic, index) => (
+      {reversedTopics.map((topic, index) => (
         <div key={index} className="flex flex-col items-center w-full p-4 bg-cyan-700 text-black rounded-lg shadow-md">
           <TopicCard
             topic_id={topic.topic_id}
