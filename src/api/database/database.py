@@ -417,6 +417,7 @@ class AniFamDatabase:
     
     def fetch_comments(self, anime_name: str, anime_episode: str) -> list | None:
         cursor = self.con.cursor()
+        print(anime_episode)
         try:
             cursor.execute(
                 "SELECT * FROM anime_comments WHERE anime_title LIKE ? AND anime_episode=? ORDER BY date DESC",
@@ -442,3 +443,34 @@ class AniFamDatabase:
             return False
         self.con.commit()
         return True
+    
+    def fetch_topic_comments(self, title: str) -> list | None:
+        cursor = self.con.cursor()
+        print(title)
+        try:
+            cursor.execute(
+                "SELECT * FROM topic_comments WHERE topic_title LIKE ? ORDER BY date DESC",
+                (title,)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error fetching comments: %s", e)
+            return None
+        comments = cursor.fetchall()
+        if not comments:
+            return []
+        return comments
+
+    def save_topic_comment(self, username: str, topic_title: str, comment: str) -> bool:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO topic_comments (user, topic_title, comment, date) VALUES (?, ?, ?, datetime('now'))",
+                (username, topic_title, comment)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error saving comment: %s", e)
+            return False
+        self.con.commit()
+        return True
+
+    

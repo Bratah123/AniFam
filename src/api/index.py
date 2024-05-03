@@ -200,13 +200,14 @@ def topic_page() -> tuple[Response, int]:
     user = get_jwt_identity()
     user_is_admin = get_jwt()["is_admin"]
     topic_title = request.args.get("title")
-    topic_description = request.args.get("long_description")
+    comments = []
  
     if not topic_title:
         return jsonify( message="Topic title not provided", status=400)
     
     with AniFamDatabase() as db:
         topic = db.fetch_topic(topic_title)
+        comments = db.fetch_topic_comments(topic_title)
     
     if not topic:
         return jsonify(logged_in_as=user, is_admin=user_is_admin, message="Topic does not exist", status=404)
@@ -215,35 +216,8 @@ def topic_page() -> tuple[Response, int]:
         "long_description": topic.long_description,
         "short_description": topic.short_description
     }
-    return jsonify(logged_in_as=user, is_admin=user_is_admin, topic=topic_dict), 200
+    return jsonify(topic=topic_dict, comments=comments, logged_in_as=user, is_admin=user_is_admin), 200
 
-@app.route('/comments', methods=['POST'])
-@jwt_required()
-def post_comment():
-    user = get_jwt_identity()
-    data = request.json
-    topic_title = data.get('topic_title')
-    comment_text = data.get('comment_text')
-
-    if not topic_title or not comment_text:
-        return jsonify({"message": "Missing topic title or comment text", "status": 400}), 400
-
-    with AniFamDatabase() as db:
-        success = db.save_comment(topic_title, user, comment_text)
-        if success:
-            return jsonify({"message": "Comment posted successfully", "status": 201}), 201
-        else:
-            return jsonify({"message": "Failed to post comment", "status": 500}), 500
-
-@app.route('/comments/<topic_title>', methods=['GET'])
-@jwt_required()
-def get_comments(topic_title):
-    with AniFamDatabase() as db:
-        comments = db.fetch_comments_for_topic(topic_title)
-        if comments is not None:
-            return jsonify({"comments": comments, "status": 200}), 200
-        else:
-            return jsonify({"message": "No comments found or error fetching comments", "status": 404}), 404
 
 @app.route("/users", methods=["GET"])
 @jwt_required()
@@ -473,6 +447,26 @@ def upload_comment() -> tuple[Response, int]:
             return jsonify(logged_in_as=user, message="Error saving comment", status=500), 500
 
     return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200), 200
+
+# This is the route for topic_comments
+@app.route("/topic_comment/upload", methods=["POST"])
+@jwt_required()
+def upload_topic_comment() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    form_data = request.form
+    topic_title = form_data["title"]
+    comment = form_data["comment"]
+
+    with AniFamDatabase() as db:
+        title = db.fetch_topic(topic_title)
+        if not title:
+            return jsonify(logged_in_as=user, message="Topic does not exist", status=404), 404
+        result = db.save_topic_comment(user, topic_title, comment)
+        if not result:
+            return jsonify(logged_in_as=user, message="Error saving comment", status=500), 500
+        
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200), 200       
 
 def main(): # Entry point of flask server
     cli_arguments = sys.argv

@@ -213,79 +213,104 @@ export async function uploadAnimeEpisode(data: FormData) {
             headers: {
                 Authorization: `Bearer ${jwt?.value}`,
             },
-        });
-        return await result.json();
-    } catch (error) {
-        console.log(error);
-        return error;
-    }
-}
+                });
+                return await result.json();
+            } catch (error) {
+                console.log(error);
+                return error;
+            }
+        }
 
-export async function deleteAnimeEpisode(data: FormData) {
-  const jwt = cookies().get('access_token');
-  let result: Response;
-  try {
-      result = await fetch('http://127.0.0.1:5328/admin/delete', {
-          method: 'DELETE',
-          body: data,
-          cache: 'no-cache',
-          credentials: 'include',
-          headers: {
-              Authorization: `Bearer ${jwt?.value}`,
-          },
-      });
-      return await result.json();
-  } catch (error) {
-      console.log(error);
-      return error;
-  }
-}
+        export async function deleteAnimeEpisode(data: FormData) {
+          const jwt = cookies().get('access_token');
+          let result: Response;
+          try {
+              result = await fetch('http://127.0.0.1:5328/admin/delete', {
+                  method: 'DELETE',
+                  body: data,
+                  cache: 'no-cache',
+                  credentials: 'include',
+                  headers: {
+                      Authorization: `Bearer ${jwt?.value}`,
+                  },
+              });
+              return await result.json();
+          } catch (error) {
+              console.log(error);
+              return error;
+          }
+        }
 
-export async function uploadForumTopic(title: string, long_description: string, short_description: string) {
-    const jwt = cookies().get('access_token');
-    let result: Response;
-    let form = new FormData();
-    form.append('title', title);
-    form.append('long_description', long_description);
-    form.append('short_description', short_description);
-    try {
-        result = await fetch('http://127.0.0.1:5328/forums/upload', {
-            method: 'POST',
-            body: form,
-            cache: 'no-cache',
-            credentials: 'include',
-            headers: {
-                Authorization: `Bearer ${jwt?.value}`,
-            },
-        });
-        return await result.json();
-    } catch (error) {
-        console.log(error);
-        return error;
-    }
-}
+        export async function uploadForumTopic(title: string, long_description: string, short_description: string) {
+            const jwt = cookies().get('access_token');
+            let result: Response;
+            let form = new FormData();
+            form.append('title', title);
+            form.append('long_description', long_description);
+            form.append('short_description', short_description);
+            try {
+                result = await fetch('http://127.0.0.1:5328/forums/upload', {
+                    method: 'POST',
+                    body: form,
+                    cache: 'no-cache',
+                    credentials: 'include',
+                    headers: {
+                        Authorization: `Bearer ${jwt?.value}`,
+                    },
+                });
+                return await result.json();
+            } catch (error) {
+                console.log(error);
+                return error;
+            }
+        }
 
-export async function uploadComment(animeName: string, animeEpisode: string, comment: string) {
-    const jwt = cookies().get('access_token');
-    let result: Response;
-    let form = new FormData();
-    form.append('animeName', animeName);
-    form.append('animeEpisode', animeEpisode);
-    form.append('comment', comment);
-    try {
-        result = await fetch('http://127.0.0.1:5328/comment/upload', {
-            method: 'POST',
-            body: form,
-            cache: 'no-cache',
-            credentials: 'include',
-            headers: {
-                Authorization: `Bearer ${jwt?.value}`,
-            },
-        });
-        return await result.json();
-    }
-    catch (error) {
-        console.log(error);
-        return error;
-    }
-}
+        export async function uploadComment(animeName: string, animeEpisode: string, comment: string) {
+            const jwt = cookies().get('access_token');
+            let result: Response;
+            let form = new FormData();
+            form.append('animeName', animeName);
+            form.append('animeEpisode', animeEpisode);
+            form.append('comment', comment);
+            try {
+                result = await fetch('http://127.0.0.1:5328/comment/upload', {
+                    method: 'POST',
+                    body: form,
+                    cache: 'no-cache',
+                    credentials: 'include',
+                    headers: {
+                        Authorization: `Bearer ${jwt?.value}`,
+                    },
+                });
+                return await result.json();
+            }
+            catch (error) {
+                console.log(error);
+                return error;
+            }
+        }
+
+        export async function uploadTopicComment(title: string, comment: string) {
+            const jwt = cookies().get('access_token');
+            let result: Response;
+            let form = new FormData();
+            form.append('title', title);
+            form.append('comment', comment);
+            try {
+                result = await fetch('http://127.0.0.1:5328/topic_comment/upload', {
+                    method: 'POST',
+                    body: form,
+                    cache: 'no-cache',
+                    credentials: 'include',
+                    headers: {
+                        Authorization: `Bearer ${jwt?.value}`,
+                    },
+                });
+                return await result.json();
+            }
+            catch (error) {
+                console.log(error);
+                return error;
+            }
+        }
+

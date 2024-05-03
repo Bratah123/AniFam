@@ -58,6 +58,11 @@ def init_db():
         "CREATE TABLE IF NOT EXISTS anime_comments (comment_id INTEGER PRIMARY KEY, \
             anime_title TEXT, anime_episode TEXT, user TEXT, comment TEXT, date datetime, replies TEXT)"
     )
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS topic_comments (comment_id INTEGER PRIMARY KEY, \
+         topic_title TEXT, user TEXT, comment TEXT, date datetime, replies TEXT)"
+    )
+
     # Create a guest admin account if it doesn't exist
     # Query for the admin account
     admin = con.execute("SELECT * FROM user WHERE username = 'admin'").fetchone()
