@@ -1,14 +1,19 @@
 'use client';
-import { MediaComment } from '@/app/components/media_comment';
+import { MediaComment, MediaCommentProps } from '@/app/components/media_comment';
 
 /*
 * CSS taken from https://flowbite.com/blocks/publisher/comments/ and modified to fit the project
 */
-export function CommentSection() {
+export interface CommentSectionProps {
+    comments: MediaCommentProps[];
+}
+
+export function CommentSection(commentSectionProps: CommentSectionProps) {
+    let amountOfComments = commentSectionProps.comments.length;
     return (
         <div className="bg-white dark:bg-gray-900 py-8 px-6 antialiased">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Comments (20)</h2>
+                <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Comments ({amountOfComments})</h2>
             </div>
             <form className="mb-6">
                 <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -22,7 +27,9 @@ export function CommentSection() {
                     Post comment
                 </button>
             </form>
-            <MediaComment user='admin' comment='Oh cmon, I was really excited to watch Bocchi the Rock!! too...' date='May 2, 2024' replies={[]}/>
+            {commentSectionProps.comments.map((comment, index) => (
+                <MediaComment key={index} user={comment.user} comment={comment.comment} date={comment.date} replies={comment.replies} />
+            ))}
         </div>
     );
 }

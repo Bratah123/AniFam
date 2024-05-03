@@ -44,6 +44,20 @@ def init_db():
         "CREATE TABLE IF NOT EXISTS animes (anime_id INTEGER PRIMARY KEY, \
             title TEXT, description TEXT, rating REAL, synopsis TEXT, image TEXT, genre TEXT, episodes TEXT, date_edited datetime, total_episodes INTEGER)"
     )
+    # Anime comments table
+    # See app/components/MediaComment.tsx for the interface
+    # export interface MediaCommentProps { 
+    # user: string;
+    # comment: string;
+    # date: string;
+    # replies: string[];
+    # }
+    # Delete any table named anime_comments
+
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS anime_comments (comment_id INTEGER PRIMARY KEY, \
+            anime_title TEXT, anime_episode TEXT, user TEXT, comment TEXT, date datetime, replies TEXT)"
+    )
     # Create a guest admin account if it doesn't exist
     # Query for the admin account
     admin = con.execute("SELECT * FROM user WHERE username = 'admin'").fetchone()

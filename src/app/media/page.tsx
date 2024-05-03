@@ -5,6 +5,7 @@ import Divider from '@/app/components/divider';
 import EpisodeButton from '@/app/components/episode_button';
 import { CommentSection } from '@/app/components/comment_section';
 import Image from 'next/image';
+import { MediaCommentProps } from '../components/media_comment';
 
 function initEpisodeButtonData(animeName: string, episodes: string[]) {
     const episodeNavButtons: any[] = [];
@@ -25,6 +26,31 @@ function initEpisodeButtonData(animeName: string, episodes: string[]) {
     return episodeNavButtons;
 }
 
+function commentDataToMediaCommentProps(commentData: any[]) {
+    /* Example Incoming data from Flask Server
+        [
+            {
+                "user": "Brandon",
+                "comment": "Bocchi the Rock! is peak fiction, you have to watch it once episodes on here exist!",
+                "date": "2023-10-10",
+                "replies": []
+            },
+        ]
+    */
+    const mediaCommentPropsList: MediaCommentProps[] = [];
+
+    commentData.forEach((comment, _) => {
+        mediaCommentPropsList.push({
+            user: comment.user,
+            comment: comment.comment,
+            date: comment.date,
+            replies: comment.replies,
+        });
+    });
+
+    return mediaCommentPropsList;
+}
+
 // THIS IS THE IP OF THE FLASK SERVER THAT SERVES THE VIDEOS
 // CHANGE THIS TO THE Public ipv4 address of the machine this is running on
 // if you want this web app to work in a public setting.
@@ -35,9 +61,13 @@ export default async function MediaPage(params: any) {
 
     const result = await fetchAnyAvailSession('mediapage', {'animeName': searchParams.animeName});
     const episodes = result.episodes;
+    const comments = result.comments;
+
     const episode = searchParams.episode;
     const animeName = searchParams.animeName;
     const episodeButtonData = initEpisodeButtonData(animeName, episodes);
+
+    const commentsProps = commentDataToMediaCommentProps(comments);
     
     return (
         <div>
@@ -83,7 +113,7 @@ export default async function MediaPage(params: any) {
                     <AnimePlayer videoPath={`http://${VIDEO_SERVER_IP}:5328/static/${animeName}/E${episode}.mp4`}/>
                 )}
             </div>
-            <CommentSection />
+            <CommentSection comments={commentsProps}/>
         </div>
     );
 }

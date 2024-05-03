@@ -16,9 +16,9 @@ export function MediaComment(comment: MediaCommentProps) {
 
     return (
         <div>
-            <footer className="flex justify-between items-center mb-2">
+            <footer className="flex justify-between items-center mb-2 my-10">
                 <div className="flex items-center">
-                    <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"/>
+                    <p className="inline-flex items-center text-sm text-gray-900 dark:text-white font-semibold"/>
                         <Image
                             className="mr-2 w-6 h-6 rounded-full"
                             src="/anya_chibi_happy.jpg"

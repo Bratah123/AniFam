@@ -173,21 +173,39 @@ def media_page() -> tuple[Response, int]:
     user_is_admin = get_jwt()["is_admin"]
     anime_name = request.args.get("animeName")
 
-    if not anime_name:
-        return jsonify(logged_in_as=user, message="Anime name not provided", status=400)
-    
     episodes = []
+    comments = []
+
+    if not anime_name:
+        return jsonify(logged_in_as=user, message="Anime name not provided", status=400, episodes=episodes, comments=comments), 404
 
     with AniFamDatabase() as db:
         episodes = db.fetch_episodes_from_anime(anime_name)
-    
+
     if not episodes:
-        return jsonify(logged_in_as=user, message="Anime does not exist", status=404)
+        return jsonify(logged_in_as=user, is_admin=user_is_admin, message="Anime does not exist", status=404, episodes=episodes, comments=comments), 404
     
     if episodes[0] == '':
         episodes = []
+
+    # TODO: Find comments for the anime
+    # Mock Data
+    comments = [
+        {
+            "user": "Tung",
+            "comment": "I agree with Brandon!",
+            "date": "2023-10-10",
+            "replies": []
+        },
+        {
+            "user": "Brandon",
+            "comment": "Bocchi the Rock! is peak fiction, you have to watch it once episodes on here exist!",
+            "date": "2023-10-10",
+            "replies": []
+        },
+    ]
     
-    return jsonify(logged_in_as=user, is_admin=user_is_admin, episodes=episodes), 200
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, episodes=episodes, comments=comments), 200
 
 @app.route("/topicpage", methods=["GET"])
 @jwt_required()
