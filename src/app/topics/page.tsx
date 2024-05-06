@@ -26,10 +26,8 @@ function commentDataToTopicCommentProps(topicCommentData: any[]) {
 }
 
 export default async function TopicPage(params: any) {
-    console.log("Received params:", params);  // Debug log for incoming parameters
     const searchParams = params.searchParams;
     const res = await fetchAnyAvailSession('topicpage', {'title': searchParams.topic_title});
-    console.log("Response from server:", res);  // Debug log for server response
     const user = res.logged_in_as;
     const comments = res.comments;
     const { title, long_description, short_description } = res.topic || { title: 'Title Not Found', long_description: 'Description not available', short_description: '' };
