@@ -112,8 +112,9 @@ export default function AdminUpload() {
                         <InputField label="Video File (spy.mp4)" placeholder="Upload Video" value={file} type="file" required={true} accept="video/mp4"
                                     onChange={
                                         (e) => {
-                                            setFile(e.target.value)
-                                            const file = e.target.files?.[0];
+                                            const event = e as React.ChangeEvent<HTMLInputElement>;
+                                            setFile(event.target.value)
+                                            const file = event.target.files?.[0];
                                             if (file) {
                                                 setVideoFile(file);
                                             }
