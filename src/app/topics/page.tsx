@@ -2,7 +2,8 @@ import Navbar from '@/app/components/navbar';
 import { fetchAnyAvailSession } from '@/app/actions';
 import { TopicCommentSection } from '@/app/components/topic_comment_section';
 import TopicPageLayout from '@/app/components/topic_page_layout'; 
-import { TopicCommentProps } from '../components/topic_comment';
+import { TopicCommentProps } from '@/app/components/topic_comment';
+import DeleteTopicButton from '@/app/components/delete_topic_button';
 
 function commentDataToTopicCommentProps(topicCommentData: any[]) {
     const topicCommentPropsList: TopicCommentProps[] = [];
@@ -33,13 +34,13 @@ export default async function TopicPage(params: any) {
     const comments = res.comments;
     const { title, long_description, short_description } = res.topic || { title: 'Title Not Found', long_description: 'Description not available', short_description: '' };
 
-
     const commentsProps = commentDataToTopicCommentProps(comments);
 
     return (
         <div>
             <Navbar isAdmin={res.is_admin} onHome={false} onAdmin={false} onForums={true} />
             <br></br>
+            <DeleteTopicButton text="Delete Topic" link={`/forums`} />
             <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} />
             <TopicCommentSection comments={commentsProps} user={user} topic_title={title} />
         </div>
