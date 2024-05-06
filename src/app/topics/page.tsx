@@ -13,12 +13,12 @@ function commentDataToTopicCommentProps(topicCommentData: any[]) {
         return topicCommentPropsList; 
     }
 
-    topicCommentData.forEach((comment) => {
+    topicCommentData.forEach((comment, _) => {
         topicCommentPropsList.push({
-            user: comment.user,
-            comment: comment.comment,
-            date: comment.date,
-            replies: comment.replies,
+            user: comment[2],
+            comment: comment[3],
+            date: comment[4],
+            replies: comment[5],
         });
     });
 
