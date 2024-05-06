@@ -11,23 +11,7 @@ export interface TopicCommentProps {
 
 export function TopicComment(comment: TopicCommentProps) {
 
-    const handleDelete = async () => {
-        try {
-            const response = await fetch(`/api/comments/${id}`, { 
-                method: 'DELETE'
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to delete the comment');
-            }
-
-            alert('Comment deleted successfully!');
-        } catch (error) {
-            console.error('Error deleting comment:', error);
-            alert('Error deleting comment');
-        }
-    };
-
+    
     return (
         <div>
             <footer className="flex justify-between items-center mb-2 my-10">
