@@ -6,36 +6,49 @@ type InputProp = {
     value: string;
     type?: string;
     required: boolean;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => void;
     min?: number;
     max?: number;
     accept?: string;
     onFocus?: () => void;
+    rows?: number; // Optional rows prop for textarea to change textarea height
 };
-export default function InputField(prop: InputProp) {
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = event.target.value;
-        if (prop.onChange) {
-            prop.onChange(event);
+
+export default function InputField(props: InputProp) {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (props.onChange) {
+            props.onChange(event);
         }
-    }
+    };
+
     return (
         <div>
             <label className="text-sm font-bold leading-tight tracking-normal">
-                {prop.label}
+                {props.label}
             </label>
-            <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder={prop.placeholder}
-                value={prop.value}
-                type={prop.type}
-                required={prop.required}
-                onChange={handleChange}
-                min={prop.min}
-                max={prop.max}
-                accept={prop.accept}
-                onFocus={prop.onFocus}
-            />
+            {props.type === 'textarea' ? (
+                <textarea
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder={props.placeholder}
+                    value={props.value}
+                    required={props.required}
+                    onChange={handleChange as React.ChangeEventHandler<HTMLTextAreaElement>}
+                    rows={props.rows || 3}  
+                />
+            ) : (
+                <input
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder={props.placeholder}
+                    value={props.value}
+                    type={props.type}
+                    required={props.required}
+                    onChange={handleChange as React.ChangeEventHandler<HTMLInputElement>}
+                    min={props.min}
+                    max={props.max}
+                    accept={props.accept}
+                    onFocus={props.onFocus}
+                />
+            )}
         </div>
     );
 }
