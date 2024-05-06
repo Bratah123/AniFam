@@ -9,7 +9,12 @@ type ButtonProp = {
 export default function TopicButton(prop: ButtonProp) {
     const router = useRouter();
     return (
-        <div>
+        <div style={{
+            position: 'fixed',  
+            top: 0,             
+            right: 0,         
+            zIndex: 1000        
+        }}>
             <button
                 onClick={() => router.push(prop.link)}
                 className="rounded bg-indigo-700 px-8 py-2 text-sm text-white transition duration-150 ease-in-out
