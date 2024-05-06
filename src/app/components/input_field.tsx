@@ -34,6 +34,7 @@ export default function InputField(props: InputProp) {
                     required={props.required}
                     onChange={handleChange as React.ChangeEventHandler<HTMLTextAreaElement>}
                     rows={props.rows || 3}  
+                    style={{ resize: 'none' }} 
                 />
             ) : (
                 <input
