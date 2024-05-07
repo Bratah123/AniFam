@@ -16,8 +16,8 @@ export default function TopicCard({
 }: TopicCardProp) {
   return (
     <div className="relative w-full h-full p-6 bg-cyan-500 bg-opacity-80 rounded-lg shadow-md hover:shadow-lg transition-opacity duration-300">
-      <div className="user-box absolute top-0 right-0 p-2 bg-blue-500 bg-white text-gray-900 rounded-lg">
-        Post by: {user}
+      <div className="user-box absolute top-0 right-0 p-2 bg-blue-500 bg-blue text-gray-900 rounded-lg">
+        Posted by: {user}
       </div>
       <Link
         href={{
