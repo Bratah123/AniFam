@@ -162,6 +162,22 @@ def delete_user() -> tuple[Response, int]:
 
     return jsonify(status=status, message=status_message)
 
+@app.route("/user", methods=["GET"])
+@jwt_required()
+def get_user() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    is_admin = get_jwt()["is_admin"]
+    username = request.args.get("username")
+
+    if not username:
+        return jsonify(logged_in_as=user, message="Username not provided", status=400)
+    
+    with AniFamDatabase() as db:
+        user = db.fetch_user(username)
+        if not user:
+            return jsonify(logged_in_as=user, message="User does not exist", status=404)
+    
+    return jsonify(logged_in_as=user, is_admin=is_admin, user=user), 200
 
 @app.route("/homepage", methods=["GET"])
 @jwt_required()
@@ -245,7 +261,8 @@ def topic_page() -> tuple[Response, int]:
     topic_dict = {
         "title": topic.title,
         "long_description": topic.long_description,
-        "short_description": topic.short_description
+        "short_description": topic.short_description,
+        "user": topic.user
     }
     return jsonify(topic=topic_dict, comments=comments, logged_in_as=user, is_admin=user_is_admin), 200
 
@@ -280,7 +297,8 @@ def forums() -> tuple[Response, int]:
             "topic_id": topic.topic_id,
             "title": topic.title,
             "long_description": topic.long_description,
-            "short_description": topic.short_description
+            "short_description": topic.short_description,
+            "user": topic.user,
         } for topic in topics]
 
         return jsonify(logged_in_as=user, is_admin=user_is_admin, topics=topics_info), 200
@@ -292,20 +310,18 @@ def forums() -> tuple[Response, int]:
 def create_topic() -> tuple[Response, int]:
     user = get_jwt_identity()
     user_is_admin = get_jwt()["is_admin"]
-    if not user_is_admin:
-        return jsonify(logged_in_as=user, message="You are not authorized to access this route"), 401
     form_data = request.form
-    topic_data = {
-        'title': form_data["title"],
-        'long_description': form_data["long_description"],
-        'short_description': form_data["short_description"]
-    }
+
+    if not form_data["title"] or not form_data["long_description"] or not form_data["short_description"]:
+        return jsonify(message="Missing required topic information."), 400
+
     with AniFamDatabase() as db:
-        success = db.save_topic(topic_data["title"], topic_data["long_description"], topic_data["short_description"])
+        success = db.save_topic(form_data["title"], form_data["long_description"], form_data["short_description"], user)
         if success:
-            return jsonify(logged_in_as=user, message="Topic saved successfully"), 201
+            return jsonify(logged_in_as=user, is_admin=user_is_admin, message="Topic saved successfully"), 201
         else:
-            return jsonify(logged_in_as=user, message="Failed to save topic"), 500
+            return jsonify(logged_in_as=user, is_admin=user_is_admin, message="Failed to save topic"), 500
+
 
 @app.route("/admin/upload", methods=["POST"])
 @jwt_required()

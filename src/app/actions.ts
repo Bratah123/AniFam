@@ -142,10 +142,6 @@ export async function fetchAnyAvailSession(
         return;
     }
 
-    // if (result.status === 200) {
-    //     // User is authenticated
-    // }
-
     if (result.status === 401 || result.status === 422) {
         console.log('User is not authenticated');
         redirect('/');
@@ -241,13 +237,14 @@ export async function uploadAnimeEpisode(data: FormData) {
           }
         }
 
-        export async function uploadForumTopic(title: string, long_description: string, short_description: string) {
+        export async function uploadForumTopic(title: string, long_description: string, short_description: string, user: string) {
             const jwt = cookies().get('access_token');
             let result: Response;
             let form = new FormData();
             form.append('title', title);
             form.append('long_description', long_description);
             form.append('short_description', short_description);
+            form.append('user', user);
             try {
                 result = await fetch('http://127.0.0.1:5328/forums/upload', {
                     method: 'POST',
@@ -313,4 +310,5 @@ export async function uploadAnimeEpisode(data: FormData) {
                 return error;
             }
         }
+    
 
