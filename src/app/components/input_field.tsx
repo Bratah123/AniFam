@@ -35,6 +35,7 @@ export default function InputField(props: InputProp) {
                     onChange={handleChange as React.ChangeEventHandler<HTMLTextAreaElement>}
                     rows={props.rows || 3}  
                     style={{ resize: 'none' }} 
+                    onFocus={props.onFocus}
                 />
             ) : (
                 <input
