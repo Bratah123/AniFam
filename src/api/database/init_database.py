@@ -29,12 +29,14 @@ def init_db():
     con.execute(
         "CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, email TEXT, is_admin BOOL)"
     )
+    con.execute(
+        "DROP TABLE IF EXISTS topics"
+    )
     # Topics table
     con.execute(
         "CREATE TABLE IF NOT EXISTS topics (topic_id INTEGER PRIMARY KEY, \
-            title TEXT, long_description TEXT, short_description TEXT)"
+            title TEXT, long_description TEXT, short_description TEXT, user TEXT)"
     )
-
     # Anime table
     # image TEXT: this contains a URL from cdn.myanimelist.net likely scraped from the website
     # episodes TEXT: This is a comma separated list of episode numbers I.E. "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
@@ -44,6 +46,7 @@ def init_db():
         "CREATE TABLE IF NOT EXISTS animes (anime_id INTEGER PRIMARY KEY, \
             title TEXT, description TEXT, rating REAL, synopsis TEXT, image TEXT, genre TEXT, episodes TEXT, date_edited datetime, total_episodes INTEGER)"
     )
+    
     # Anime comments table
     # See app/components/MediaComment.tsx for the interface
     # export interface MediaCommentProps { 
@@ -62,7 +65,6 @@ def init_db():
         "CREATE TABLE IF NOT EXISTS topic_comments (comment_id INTEGER PRIMARY KEY, \
          topic_title TEXT, user TEXT, comment TEXT, date datetime, replies TEXT)"
     )
-
     # Create a guest admin account if it doesn't exist
     # Query for the admin account
     admin = con.execute("SELECT * FROM user WHERE username = 'admin'").fetchone()

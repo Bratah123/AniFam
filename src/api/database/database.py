@@ -56,12 +56,14 @@ class TopicData:
         self.title = ''
         self.long_description = ''
         self.short_description = ''
+        self.user = ''
         
     def load(self, data: tuple) -> None:
         self.topic_id = int(data[0])
         self.title = data[1]
         self.long_description = data[2]
         self.short_description = data[3]
+        self.user = data[4]
         return self
 
 class AniFamDatabase:
@@ -364,12 +366,12 @@ class AniFamDatabase:
         self.con.commit()
         return True
 
-    def save_topic(self, title: str, long_description: str, short_description: str) -> bool:
+    def save_topic(self, title: str, long_description: str, short_description: str, user: str) -> bool:
         cursor = self.con.cursor()
         try:
             cursor.execute(
-                "INSERT INTO topics (title, long_description, short_description) VALUES (?, ?, ?)",
-                (title, long_description, short_description)
+                "INSERT INTO topics (title, long_description, short_description, user) VALUES (?, ?, ?, ?)",
+                (title, long_description, short_description, user)
             )
         except sqlite3.OperationalError as e:
             log.error("Error saving topic: %s", e)
@@ -445,7 +447,6 @@ class AniFamDatabase:
     
     def fetch_topic_comments(self, title: str) -> list | None:
         cursor = self.con.cursor()
-        print(title)
         try:
             cursor.execute(
                 "SELECT * FROM topic_comments WHERE topic_title LIKE ? ORDER BY date DESC",
