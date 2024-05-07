@@ -29,9 +29,7 @@ def init_db():
     con.execute(
         "CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, email TEXT, is_admin BOOL)"
     )
-    con.execute(
-        "DROP TABLE IF EXISTS topics"
-    )
+
     # Topics table
     con.execute(
         "CREATE TABLE IF NOT EXISTS topics (topic_id INTEGER PRIMARY KEY, \
@@ -65,6 +63,10 @@ def init_db():
     con.execute(
         "CREATE TABLE IF NOT EXISTS topic_comments (comment_id INTEGER PRIMARY KEY, \
          topic_title TEXT, user TEXT, comment TEXT, date datetime, replies TEXT)"
+    )
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS topic_comment_replies (reply_id INTEGER PRIMARY KEY, \
+            parent_comment_id INTEGER, topic_title TEXT, user TEXT, comment TEXT, date datetime, FOREIGN KEY(parent_comment_id) REFERENCES topic_comments(comment_id),FOREIGN KEY(user) REFERENCES user(username))"
     )
     # Create a guest admin account if it doesn't exist
     # Query for the admin account

@@ -459,6 +459,28 @@ class AniFamDatabase:
         if not comments:
             return []
         return comments
+    
+    def fetch_comment_by_id(self, comment_id: int) -> dict | None:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "SELECT * FROM topic_comments WHERE comment_id = ?",
+                (comment_id,)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error fetching comment by ID: %s", e)
+            return None
+        comment = cursor.fetchone()
+        if not comment:
+            return None
+        return {
+            "comment_id": comment[0],
+            "topic_title": comment[1],
+            "user": comment[2],
+            "comment": comment[3],
+            "date": comment[4],
+            "replies": comment[5]
+        }
 
     def save_topic_comment(self, username: str, topic_title: str, comment: str) -> bool:
         cursor = self.con.cursor()
@@ -469,6 +491,19 @@ class AniFamDatabase:
             )
         except sqlite3.OperationalError as e:
             log.error("Error saving comment: %s", e)
+            return False
+        self.con.commit()
+        return True
+    
+    def delete_topic_comment(self, comment_id: int) -> bool:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "DELETE FROM topic_comments WHERE comment_id=?",
+                (comment_id,)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error deleting comment: %s", e)
             return False
         self.con.commit()
         return True
