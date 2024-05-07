@@ -24,7 +24,6 @@ export function CommentSection(commentSectionProps: CommentSectionProps) {
         event.preventDefault();
         const res = await uploadComment(commentSectionProps.animeName, commentSectionProps.episode, comment);
         if (res.status === 200) {
-            alert('Comment posted successfully');
             // Clear the comment box
             setComment('');
             // Update the comments and add to the top of the list

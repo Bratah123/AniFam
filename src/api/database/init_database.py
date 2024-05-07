@@ -61,6 +61,7 @@ def init_db():
         "CREATE TABLE IF NOT EXISTS anime_comments (comment_id INTEGER PRIMARY KEY, \
             anime_title TEXT, anime_episode TEXT, user TEXT, comment TEXT, date datetime, replies TEXT)"
     )
+
     con.execute(
         "CREATE TABLE IF NOT EXISTS topic_comments (comment_id INTEGER PRIMARY KEY, \
          topic_title TEXT, user TEXT, comment TEXT, date datetime, replies TEXT)"
