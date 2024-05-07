@@ -2,21 +2,23 @@
 import Navbar from '@/app/components/navbar';
 import InputField from "@/app/components/input_field";
 import {FormEvent, useState} from "react";
-import {uploadForumTopic} from "@/app/actions"; 
+import { fetchAnyAvailSession, uploadForumTopic} from "@/app/actions"; 
 
 export default function ForumsUploadPage() {
     const [title, setTitle] = useState('');
     const [long_description, setLongDescription] = useState('');
     const [short_description, setShortDescription] = useState('');
-    
+
     async function onUpload(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        const res = await fetchAnyAvailSession('');
+        const user = res.logged_in_as;
         const formData = new FormData();
         formData.append('title', title);
         formData.append('long_description', long_description);
         formData.append('short_description', short_description);
 
-        const data = await uploadForumTopic(title,long_description, short_description); 
+        const data = await uploadForumTopic(title,long_description, short_description, user); 
 
         if (data.status === 200) {
             alert('Topic uploaded successfully');

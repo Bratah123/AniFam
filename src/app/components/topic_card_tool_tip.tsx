@@ -8,6 +8,7 @@ export interface TopicToolTipProps {
   title: string;
     long_description: string;
     short_description: string;
+    user: string;
   
 }
 interface Props extends TopicToolTipProps {

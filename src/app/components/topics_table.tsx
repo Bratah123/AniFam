@@ -7,6 +7,7 @@ export interface Topic {
   title: string;
   long_description: string;
   short_description: string;
+  user: string;
 }
 
 interface Props {
@@ -29,6 +30,7 @@ export function TopicTable({ topicList = [] }: Props) {
             title={topic.title}
             short_description={topic.short_description}
             long_description={topic.long_description}
+            user={topic.user}
           />
         </div>
       ))}
