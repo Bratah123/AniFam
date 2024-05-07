@@ -39,7 +39,7 @@ export default async function TopicPage(params: any) {
             <Navbar isAdmin={res.is_admin} onHome={false} onAdmin={false} onForums={true} />
             <br></br>
             <DeleteTopicButton text="Delete Topic" link={`/forums`} />
-            <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} />
+            <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} user={user} />
             <TopicCommentSection comments={commentsProps} user={user} topic_title={title} />
         </div>
     );
