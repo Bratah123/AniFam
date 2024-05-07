@@ -266,6 +266,30 @@ def topic_page() -> tuple[Response, int]:
     }
     return jsonify(topic=topic_dict, comments=comments, logged_in_as=user, is_admin=user_is_admin), 200
 
+@app.route("/topic_comments/delete", methods=["DELETE"])
+@jwt_required()
+def delete_comment():
+    user = get_jwt_identity()
+    form_data = request.form
+    comment_id = form_data.get("comment_id")
+
+    if not comment_id:
+        return jsonify(message="Comment ID is required"), 400
+
+    with AniFamDatabase() as db:
+        comment = db.fetch_comment_by_id(comment_id)
+        if not comment:
+            return jsonify(message="Comment not found"), 404
+        
+        if comment['user'] != user and not get_jwt()["is_admin"]:
+            return jsonify(message="Unauthorized to delete this comment"), 403
+
+        if db.delete_topic_comment(comment_id):
+            return jsonify(message="Comment successfully deleted"), 200
+        else:
+            return jsonify(message="Failed to delete comment"), 500
+
+
 
 @app.route("/users", methods=["GET"])
 @jwt_required()
