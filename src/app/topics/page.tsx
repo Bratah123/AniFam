@@ -1,24 +1,26 @@
 import Navbar from '@/app/components/navbar';
 import { fetchAnyAvailSession } from '@/app/actions';
 import { TopicCommentSection } from '@/app/components/topic_comment_section';
-import TopicPageLayout from '@/app/components/topic_page_layout'; 
-import { TopicCommentProps } from '@/app/components/topic_comment';
+import TopicPageLayout from '@/app/components/topic_page_layout';
+import { BasicTopicCommentProps } from '@/app/components/topic_comment';
 import DeleteTopicButton from '@/app/components/delete_topic_button';
 
-function commentDataToTopicCommentProps(topicCommentData: any[]) {
-    const topicCommentPropsList: TopicCommentProps[] = [];
+function commentDataToTopicCommentProps(topicCommentData: any[]): BasicTopicCommentProps[] {
+    const topicCommentPropsList: BasicTopicCommentProps[] = [];
 
     if (!topicCommentData || !Array.isArray(topicCommentData)) {
         console.error('Invalid or undefined topic comment data:', topicCommentData);
-        return topicCommentPropsList; 
+        return topicCommentPropsList;
     }
 
-    topicCommentData.forEach((comment, _) => {
+    topicCommentData.forEach((comment) => {
+        const replies = commentDataToTopicCommentProps(comment[5]);
         topicCommentPropsList.push({
             user: comment[2],
             comment: comment[3],
             date: comment[4],
-            replies: comment[5],
+            replies: replies,
+            commentId: comment[0],
         });
     });
 
