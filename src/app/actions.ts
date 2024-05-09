@@ -263,6 +263,27 @@ export async function uploadForumTopic(title: string, long_description: string, 
     }
 }
 
+export async function deleteForumTopic(data: FormData) {
+    const jwt = cookies().get('access_token');
+    let result: Response;
+    try {
+        result = await fetch('http://127.0.0.1:5328/forums/delete', {
+            method: 'DELETE',
+            body: data,
+            cache: 'no-cache',
+            credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${jwt?.value}`,
+            },
+        });
+        return await result.json();
+    }
+    catch (error) {
+        console.log(error);
+        return error;
+    }
+}
+
 export async function uploadComment(animeName: string, animeEpisode: string, comment: string) {
     const jwt = cookies().get('access_token');
     let result: Response;

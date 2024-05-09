@@ -100,7 +100,7 @@ def register() -> tuple[Response, int]:
 
     return jsonify(status=status, message=status_message)
 
-@app.route("/topic", methods=["DELETE"])
+@app.route("/forums/delete", methods=["DELETE"])
 @jwt_required()
 def delete_topic() -> tuple[Response, int]:
     form_info = request.form

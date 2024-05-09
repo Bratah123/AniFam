@@ -417,6 +417,19 @@ class AniFamDatabase:
             anime_data.append(AnimeData().load(anime))
         return anime_data
     
+    def delete_topic(self, title: str) -> bool:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "DELETE FROM topics WHERE title=?",
+                (title,)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error deleting topic: %s", e)
+            return False
+        self.con.commit()
+        return True
+    
     def fetch_comments(self, anime_name: str, anime_episode: str) -> list | None:
         cursor = self.con.cursor()
         try:
