@@ -10,7 +10,7 @@ export default async function Forums(params: any) {
     <div className="flex flex-col min-h-screen relative bg-slate-1000 bg-[url(/album_collage_1080.jpg)] bg-cover bg-center bg-no-repeat opacity-85">
       <Navbar isAdmin={res.is_admin} onHome={false} onForums={true} onAdmin={false} />
       <div className="py-4 px-4 bg-black bg-opacity-80 relative">
-        <ForumTitle text="Ani X Family Forums" />
+        <ForumTitle text="Ani x Family Forums" />
       </div>
       <div className="flex flex-grow items-center justify-center relative">
         <div className="text-center">
