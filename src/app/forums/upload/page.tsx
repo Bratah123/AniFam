@@ -59,12 +59,13 @@ export default function ForumsUploadPage() {
             <Navbar isAdmin={res.is_admin} onAdmin={false} onHome={false} onForums={true}/>
             <h1 className="text-3xl font-bold text-center text-white">Upload Topic</h1>
             <form onSubmit={onUpload} className="mx-auto h-full w-full max-w-screen-lg rounded-lg bg-gray-950 px-8 py-10 shadow-lg md:px-12 relative">
-                <InputField label="Title" placeholder="Topic title" value={title} type="text" required={true} onFocus={onTitleFocus}
-                            onChange={(e) => setTitle(e.target.value)} />
-                <InputField label="Long Description" placeholder="Long description" value={long_description} type="textarea" required={true} rows={6} onFocus={onLongDescFocus}
-                            onChange={(e) => setLongDescription(e.target.value)}/>
-                <InputField label="Short Description" placeholder="Short description" value={short_description} type="textarea" required={true} rows={6} onFocus={onShortDescFocus}
-                            onChange={(e) => setShortDescription(e.target.value)}/>
+            <InputField label="Title" placeholder="Topic title" value={title} type="text" required={true} maxLength={100}
+                onChange={(e) => setTitle(e.target.value)} onFocus={onTitleFocus} />
+<           InputField label="Long Description" placeholder="Long description" value={long_description} type="textarea" required={true} rows={6} maxLength={1000}
+                onChange={(e) => setLongDescription(e.target.value)} onFocus={onLongDescFocus}/>
+            <InputField label="Short Description" placeholder="Short description" value={short_description} type="textarea" required={true} rows={3} maxLength={500}
+                onChange={(e) => setShortDescription(e.target.value)} onFocus={onShortDescFocus}/>
+
                 <button
                     style={{ position: 'absolute', bottom: 10, left: 0, width: '100%' }}  
                     className="mt-8 mb-4 rounded bg-indigo-700 px-8 py-2 text-sm text-white transition duration-150 ease-in-out hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-offset-2">

@@ -1,3 +1,4 @@
+import React from "react";
 import Navbar from '@/app/components/navbar';
 import { fetchAnyAvailSession } from '@/app/actions';
 import { TopicCommentSection } from '@/app/components/topic_comment_section';
@@ -40,10 +41,10 @@ export default async function TopicPage(params: any) {
         <div className="bg-gray-900">
             <Navbar isAdmin={res.is_admin} onHome={false} onAdmin={false} onForums={true} />
             <br></br>
-            <DeleteTopicButton text="Delete Topic" topicTitle={title} />  
-            <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} user={user} />
+            <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} user={user}>
+                <DeleteTopicButton text="Delete Topic" topicTitle={title} />
+            </TopicPageLayout>
             <TopicCommentSection comments={commentsProps} user={user} topic_title={title} />
         </div>
     );
 }
-

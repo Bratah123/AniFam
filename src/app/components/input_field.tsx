@@ -12,6 +12,7 @@ type InputProp = {
     accept?: string;
     onFocus?: () => void;
     rows?: number; // Optional rows prop for textarea to change textarea height
+    maxLength?: number; // Optional maxLength prop to control input length
 };
 
 export default function InputField(props: InputProp) {
@@ -33,9 +34,10 @@ export default function InputField(props: InputProp) {
                     value={props.value}
                     required={props.required}
                     onChange={handleChange as React.ChangeEventHandler<HTMLTextAreaElement>}
-                    rows={props.rows || 3}  
-                    style={{ resize: 'none' }} 
+                    rows={props.rows || 3}
+                    style={{ resize: 'none' }}
                     onFocus={props.onFocus}
+                    maxLength={props.maxLength}
                 />
             ) : (
                 <input
@@ -49,7 +51,14 @@ export default function InputField(props: InputProp) {
                     max={props.max}
                     accept={props.accept}
                     onFocus={props.onFocus}
+                    maxLength={props.maxLength}
                 />
+            )}
+            {/* Character count display */}
+            {props.maxLength && (
+                <p className="text-right text-xs text-gray-600">
+                    {`${props.value.length}/${props.maxLength}`}
+                </p>
             )}
         </div>
     );
