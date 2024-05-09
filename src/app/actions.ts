@@ -334,3 +334,28 @@ export async function deleteTopicComment(commentId: string) {
     }
 }
 
+export async function sendEditUserRequest(username: string, password: string, isAdmin: boolean) {
+    const jwt = cookies().get('access_token');
+    let rawResult: Response;
+    let result;
+    let form = new FormData();
+    form.append('username', username);
+    form.append('password', password);
+    form.append('is_admin', isAdmin.toString());
+
+    try {
+        rawResult = await fetch('http://127.0.0.1:5328/user', {
+            method: 'PUT',
+            body: form,
+            cache: 'no-cache',
+            credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${jwt?.value}`,
+            },
+        });
+        result = await rawResult.json();
+    } catch (error) {
+        console.log(error);
+    }
+    return result;
+}
