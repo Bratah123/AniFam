@@ -37,7 +37,7 @@ export default async function TopicPage(params: any) {
     const commentsProps = commentDataToTopicCommentProps(comments);
 
     return (
-        <div>
+        <div className="bg-gray-900">
             <Navbar isAdmin={res.is_admin} onHome={false} onAdmin={false} onForums={true} />
             <br></br>
             <DeleteTopicButton text="Delete Topic" link={`/forums`} />
