@@ -4,6 +4,7 @@
  */
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { TopicCommentResponse } from '@/app/components/topic_comment_section'; 
 
 export async function sendLoginRequest(data: FormData) {
     let rawResult: Response;
@@ -287,29 +288,32 @@ export async function uploadComment(animeName: string, animeEpisode: string, com
     }
 }
 
-export async function uploadTopicComment(title: string, comment: string) {
-    const jwt = cookies().get('access_token');
-    let result: Response;
-    let form = new FormData();
-    form.append('title', title);
+export async function uploadTopicComment(topicTitle: string, comment: string): Promise<TopicCommentResponse> {
+    const form = new FormData();
+    form.append('title', topicTitle);
     form.append('comment', comment);
+    const jwt = cookies().get('access_token');  // Make sure you are handling tokens correctly.
+
     try {
-        result = await fetch('http://127.0.0.1:5328/topic_comment/upload', {
+        const response = await fetch('http://127.0.0.1:5328/topic_comment/upload', {
             method: 'POST',
             body: form,
-            cache: 'no-cache',
-            credentials: 'include',
             headers: {
-                Authorization: `Bearer ${jwt?.value}`,
+                'Authorization': `Bearer ${jwt?.value}`,
             },
         });
-        return await result.json();
-    }
-    catch (error) {
-        console.log(error);
-        return error;
+
+        if (!response.ok) {
+            throw new Error('Failed to upload topic comment');
+        }
+
+        return response.json(); // This parses the JSON body and should match TopicCommentResponse interface
+    } catch (error) {
+        console.error('Error uploading topic comment:', error);
+        throw error; // or return a default error object conforming to TopicCommentResponse
     }
 }
+
 
 export async function deleteTopicComment(commentId: string) {
     const jwt = cookies().get('access_token');

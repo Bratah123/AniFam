@@ -482,18 +482,18 @@ class AniFamDatabase:
             "replies": comment[5]
         }
 
-    def save_topic_comment(self, username: str, topic_title: str, comment: str) -> bool:
+    def save_topic_comment(self, username: str, topic_title: str, comment: str) -> int:
         cursor = self.con.cursor()
         try:
             cursor.execute(
                 "INSERT INTO topic_comments (user, topic_title, comment, date) VALUES (?, ?, ?, datetime('now'))",
                 (username, topic_title, comment)
             )
+            self.con.commit()
+            return cursor.lastrowid  
         except sqlite3.OperationalError as e:
             log.error("Error saving comment: %s", e)
-            return False
-        self.con.commit()
-        return True
+            return -1  
     
     def delete_topic_comment(self, comment_id: int) -> bool:
         cursor = self.con.cursor()

@@ -10,6 +10,12 @@ interface TopicCommentSectionProps {
     topic_title: string;
 }
 
+export interface TopicCommentResponse {
+    status: number;
+    message: string;
+    commentId?: number; 
+}
+
 export function TopicCommentSection({ comments, user, topic_title }: TopicCommentSectionProps) {
     const [localComments, setLocalComments] = useState<TopicCommentProps[]>(comments as TopicCommentProps[]);
     const [newComment, setNewComment] = useState('');
@@ -33,9 +39,7 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
                 if (response.status === 200) {
                     const updatedComments = localComments.filter(comment => comment.commentId !== commentId);
                     setLocalComments(updatedComments);
-                    alert('Comment deleted successfully');
-                } else {
-                    alert('Failed to delete comment: ' + response.message);
+
                 }
             } catch (error) {
                 console.error('Error deleting comment:', error);
@@ -43,6 +47,7 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
             }
         }
     }
+    
 
     async function onCommentSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -50,26 +55,31 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
             alert("Please enter a non-empty comment.");
             return;
         }
-        const res = await uploadTopicComment(topic_title, newComment); 
-        if (res.status === 200) {
+    
+        const res = await uploadTopicComment(topic_title, newComment) as TopicCommentResponse;
+    
+        if (res.status === 200 && res.commentId) {
+            // If the response is successful and includes a commentId, update local state
             const newCommentData = {
                 user: user,
                 comment: newComment,
                 date: new Date().toISOString(),
                 replies: [],
-                commentId: Date.now(), // Generate a unique ID based on timestamp
+                commentId: res.commentId || 0, 
                 onReply: () => {},
                 onEdit: () => {},
-                onDelete: () => handleDelete(Date.now()) // Handle delete for newly added comment
+                onDelete: () => handleDelete(res.commentId || 0) 
             };
+
             // Add the new comment to local state
             setLocalComments([newCommentData, ...localComments]);
-            setNewComment(''); 
+            setNewComment('');  
         } else {
-            alert(res.message); 
+            // If there was a problem (e.g., the status code is not 200 or no commentId), alert the user
+            alert('Failed to post comment: ' + res.message); 
         }
     }
-
+    
     return (
         <div>
             <form onSubmit={onCommentSubmit}>
@@ -82,9 +92,9 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
                 />
                 <button type="submit">Post Comment</button>
             </form>
-            {localComments.map((comment, index) => (
-                <TopicComment key={index} {...comment} onDelete={() => handleDelete(comment.commentId)} />
-            ))}
+            {localComments.map((comment) => (
+    <TopicComment key={comment.commentId} {...comment} onDelete={() => handleDelete(comment.commentId)} />
+))}
         </div>
     );
 }

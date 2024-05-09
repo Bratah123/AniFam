@@ -533,11 +533,12 @@ def upload_topic_comment() -> tuple[Response, int]:
         title = db.fetch_topic(topic_title)
         if not title:
             return jsonify(logged_in_as=user, message="Topic does not exist", status=404), 404
-        result = db.save_topic_comment(user, topic_title, comment)
-        if not result:
+        comment_id = db.save_topic_comment(user, topic_title, comment)
+        if comment_id == -1:
             return jsonify(logged_in_as=user, message="Error saving comment", status=500), 500
         
-    return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200), 200       
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200, commentId=comment_id), 200
+
 
 def main(): # Entry point of flask server
     cli_arguments = sys.argv
