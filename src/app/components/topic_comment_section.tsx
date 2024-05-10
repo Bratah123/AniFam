@@ -21,25 +21,19 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
     const [newComment, setNewComment] = useState('');
 
     useEffect(() => {
-        setLocalComments(comments as TopicCommentProps[]); // Update local comments when props change
+        setLocalComments(comments as TopicCommentProps[]); 
     }, [comments]);
 
-    function handleReply(commentId: number) {
-        console.log("not implemented yet:", commentId);
-    }
-
-    function handleEdit(commentId: number) {
-        console.log("not implemented yet:", commentId);
-    }
 
     async function handleDelete(commentId: number) {
         if (window.confirm("Are you sure you want to delete this comment?")) {
             try {
-                const response = await deleteTopicComment(commentId.toString());
+                const response = await deleteTopicComment(commentId.toString()); 
+                console.log("Response received:", response);
                 if (response.status === 200) {
-                    const updatedComments = localComments.filter(comment => comment.commentId !== commentId);
-                    setLocalComments(updatedComments);
-
+                    setLocalComments(prevComments => prevComments.filter(comment => comment.commentId !== commentId));
+                } else {
+                    alert('Failed to delete comment');
                 }
             } catch (error) {
                 console.error('Error deleting comment:', error);
@@ -47,6 +41,7 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
             }
         }
     }
+    
     
 
     async function onCommentSubmit(event: FormEvent<HTMLFormElement>) {
@@ -66,8 +61,6 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
                 date: new Date().toISOString(),
                 replies: [],
                 commentId: res.commentId || 0, 
-                onReply: () => {},
-                onEdit: () => {},
                 onDelete: () => handleDelete(res.commentId || 0) 
             };
 
@@ -75,7 +68,6 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
             setLocalComments([newCommentData, ...localComments]);
             setNewComment('');  
         } else {
-            // If there was a problem (e.g., the status code is not 200 or no commentId), alert the user
             alert('Failed to post comment: ' + res.message); 
         }
     }

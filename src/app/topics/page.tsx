@@ -15,12 +15,10 @@ function commentDataToTopicCommentProps(topicCommentData: any[]): BasicTopicComm
     }
 
     topicCommentData.forEach((comment) => {
-        const replies = commentDataToTopicCommentProps(comment[5]);
         topicCommentPropsList.push({
             user: comment[2],
             comment: comment[3],
             date: comment[4],
-            replies: replies,
             commentId: comment[0],
         });
     });
