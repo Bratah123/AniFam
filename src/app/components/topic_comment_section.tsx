@@ -29,8 +29,11 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
         if (window.confirm("Are you sure you want to delete this comment?")) {
             try {
                 const response = await deleteTopicComment(commentId.toString()); 
-                console.log("Response received:", response);
+                if (response.status === 200) {
                     setLocalComments(prevComments => prevComments.filter(comment => comment.commentId !== commentId));
+                } else {
+                        alert('Failed to delete comment: ' + response.message);
+                    }
             } catch (error) {
                 console.error('Error deleting comment:', error);
                 alert('Error deleting comment');

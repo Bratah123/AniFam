@@ -274,22 +274,20 @@ def delete_comment():
     comment_id = form_data.get("comment_id")
 
     if not comment_id:
-        return jsonify(message="Comment ID is required"), 400
+        return jsonify(message="Comment ID is required", status=400)
 
     with AniFamDatabase() as db:
         comment = db.fetch_comment_by_id(comment_id)
         if not comment:
-            return jsonify(message="Comment not found"), 404
+            return jsonify(message="Comment not found", status= 404)
         
         if comment['user'] != user and not get_jwt()["is_admin"]:
-            return jsonify(message="Unauthorized to delete this comment"), 403
+            return jsonify(message="Unauthorized to delete this comment", status=403)
 
         if db.delete_topic_comment(comment_id):
-            return jsonify(message="Comment successfully deleted"), 200
+            return jsonify(message="Comment successfully deleted", status=200)
         else:
-            return jsonify(message="Failed to delete comment"), 500
-
-
+            return jsonify(message="Failed to delete comment", status=500)
 
 @app.route("/users", methods=["GET"])
 @jwt_required()
