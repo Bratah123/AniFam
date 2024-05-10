@@ -342,7 +342,7 @@ export async function deleteTopicComment(commentId: string) {
     let formData = new FormData();
     formData.append('comment_id', commentId);
     try {
-        result = await fetch('http://127.0.0.1:5328/topic_comments/delete', {
+        result = await fetch('http://127.0.0.1:5328/topic_comment/delete', {
             method: 'DELETE',
             body: formData,
             cache: 'no-cache',

@@ -266,7 +266,7 @@ def topic_page() -> tuple[Response, int]:
     }
     return jsonify(topic=topic_dict, comments=comments, logged_in_as=user, is_admin=user_is_admin), 200
 
-@app.route("/topic_comments/delete", methods=["DELETE"])
+@app.route("/topic_comment/delete", methods=["DELETE"])
 @jwt_required()
 def delete_comment():
     user = get_jwt_identity()
