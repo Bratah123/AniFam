@@ -39,7 +39,7 @@ export default async function TopicPage(params: any) {
         <div className="bg-gray-900">
             <Navbar isAdmin={res.is_admin} onHome={false} onAdmin={false} onForums={true} />
             <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} user={user}>
-                <div style={{ position: 'relative', top: '-20px' }}> 
+                <div style={{ position: 'absolute', top: '100px', right: '0', paddingRight: '220px' }}> 
                     <DeleteTopicButton text="Delete Topic" topicTitle={title} />
                 </div>
             </TopicPageLayout>

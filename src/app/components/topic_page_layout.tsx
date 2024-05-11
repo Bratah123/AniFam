@@ -17,13 +17,22 @@ export default function TopicPageLayout({
 }: TopicPageLayoutProps) {
     return (
         <div className="bg-gray-900 py-8 px-6 antialiased flex flex-col items-center justify-center">
-            <div className="w-full flex justify-between items-start">
-                <div style={{ width: "100px" }}> </div>
-                <h1 className="text-2xl lg:text-3xl font-bold text-white mb-4">{title}</h1>
-                <div>{children}</div> 
+            <div className="w-full flex justify-between items-center"> 
+                <div style={{ flex: 1 }}> 
+                </div>
+                <h1 className="text-2xl lg:text-3xl font-bold text-white mb-4" style={{ flex: 2, textAlign: 'center' }}>
+                    {title}
+                </h1>
+                <div style={{ flex: 1 }}> 
+                    {children}
+                </div>
             </div>
-            <p className="text-sm lg:text-md text-gray-200">Author: <strong>{user}</strong></p>
-            <p className="text-sm lg:text-md text-gray-300 mb-6">{long_description}</p>
+            <p className="text-sm lg:text-md text-gray-200" style={{ paddingBottom: '20px' }}>Author: <strong>{user}</strong></p>
+            <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%', padding: '0 200px' }}>
+                <p className="text-sm lg:text-md text-gray-300 mb-6" style={{ wordWrap: 'break-word', overflowWrap: 'break-word' }}>
+                    {long_description}
+                </p>
+            </div>
         </div>
     );
 }
