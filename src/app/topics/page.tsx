@@ -31,16 +31,17 @@ export default async function TopicPage(params: any) {
     const res = await fetchAnyAvailSession('topicpage', {'title': searchParams.topic_title }); 
     const current_user = res.logged_in_as;
     const comments = res.comments;
-    const { title, long_description, short_description, user } = res.topic || { title: 'Title Not Found', long_description: 'Description not available', short_description: '' };
+    const { title, long_description, user } = res.topic || { title: 'Title Not Found', long_description: 'Description not available', short_description: '' };
 
     const commentsProps = commentDataToTopicCommentProps(comments);
 
     return (
         <div className="bg-gray-900">
             <Navbar isAdmin={res.is_admin} onHome={false} onAdmin={false} onForums={true} />
-            <br></br>
             <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} user={user}>
-                <DeleteTopicButton text="Delete Topic" topicTitle={title} />
+                <div style={{ position: 'relative', top: '-20px' }}> 
+                    <DeleteTopicButton text="Delete Topic" topicTitle={title} />
+                </div>
             </TopicPageLayout>
             <TopicCommentSection comments={commentsProps} user={current_user} topic_title={title} />
         </div>
