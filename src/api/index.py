@@ -345,6 +345,7 @@ def create_topic() -> tuple[Response, int]:
     with AniFamDatabase() as db:
         success = db.save_topic(form_data["title"], form_data["long_description"], form_data["short_description"], user)
         if success:
+            log.info("User %s has saved a topic about %s", user, form_data["title"])
             return jsonify(logged_in_as=user, is_admin=user_is_admin, message="Topic saved successfully"), 201
         else:
             return jsonify(logged_in_as=user, is_admin=user_is_admin, message="Failed to save topic"), 500
