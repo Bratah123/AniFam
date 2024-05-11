@@ -66,7 +66,7 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
     }
     
     return (
-        <div className="bg-gray-900 py-8 px-6 antialiased">
+        <div className="bg-gray-900 py-8 px-6 antialiased min-h-screen">
             <form onSubmit={onCommentSubmit} className="mb-6">
                 <div className="py-2 px-4 mb-4 rounded-lg rounded-t-lg border bg-gray-800 border-gray-700">
                     <label htmlFor="newComment" className="sr-only">Your comment</label>
