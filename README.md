@@ -58,7 +58,7 @@ These instructions assume that the [Environment](https://github.com/Bratah123/An
 ### Opening the Website to Public (**Production**)
 These instructions are if you want to be able to access the website on a network where the website isn't hosted.
 1. Port forward the following ports (TCP): `3000` and `5328` (Flask Server)
-2. Change the [IP_ADDRESS](https://github.com/Bratah123/AniFam/blob/main/src/app/media/page.tsx#L30) constant to the machine's public IPv4 network.
+2. Change the [IP_ADDRESS](https://github.com/Bratah123/AniFam/blob/main/src/app/media/page.tsx#L57) constant to the machine's public IPv4 network.
 3. Done!
 
 ### Running the Server (**Production**)
