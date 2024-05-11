@@ -28,10 +28,10 @@ function commentDataToTopicCommentProps(topicCommentData: any[]): BasicTopicComm
 
 export default async function TopicPage(params: any) {
     const searchParams = params.searchParams;
-    const res = await fetchAnyAvailSession('topicpage', {'title': searchParams.topic_title});
-    const user = res.logged_in_as;
+    const res = await fetchAnyAvailSession('topicpage', {'title': searchParams.topic_title }); 
+    const current_user = res.logged_in_as;
     const comments = res.comments;
-    const { title, long_description, short_description } = res.topic || { title: 'Title Not Found', long_description: 'Description not available', short_description: '' };
+    const { title, long_description, short_description, user } = res.topic || { title: 'Title Not Found', long_description: 'Description not available', short_description: '' };
 
     const commentsProps = commentDataToTopicCommentProps(comments);
 
@@ -42,7 +42,7 @@ export default async function TopicPage(params: any) {
             <TopicPageLayout title={title} long_description={long_description || "Placeholder long description since it's not provided"} user={user}>
                 <DeleteTopicButton text="Delete Topic" topicTitle={title} />
             </TopicPageLayout>
-            <TopicCommentSection comments={commentsProps} user={user} topic_title={title} />
+            <TopicCommentSection comments={commentsProps} user={current_user} topic_title={title} />
         </div>
     );
 }
