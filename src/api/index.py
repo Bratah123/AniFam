@@ -106,30 +106,34 @@ def delete_topic() -> tuple[Response, int]:
     form_info = request.form
     status_message = ""
 
-    # Check if user is an admin
+    # Check if user is an admin or the user who created the topic
     is_admin = get_jwt()["is_admin"]
-    if not is_admin:
-        return jsonify(message="You are not authorized to access this route"), 401
-    
-    title = form_info["title"]
+    user = get_jwt_identity()
+    topic_title = form_info["title"]
 
-    log.info("User is attempting to delete topic %s", title)
+    log.info("User %s is attempting to delete topic %s", user, topic_title)
 
     with AniFamDatabase() as db:
-        topic = db.fetch_topic(title)
+        topic = db.fetch_topic(topic_title)
         if not topic:
-            log.info("Topic %s does not exist", title)
+            log.info("Topic %s does not exist", topic_title)
             return jsonify(message="Topic does not exist", status=404)
-        if db.delete_topic(title):
-            log.info("Topic %s has been deleted", title)
+        if topic.user != user and not is_admin:
+            log.info("User %s is not authorized to delete topic %s", user, topic_title)
+            return jsonify(message="You are not authorized to delete this topic", status=403)
+        if db.delete_topic(topic_title):
+            log.info("Topic %s has been deleted", topic_title)
             status_message = "Success"
             status = 200
         else:
-            log.info("Topic %s failed to delete", title)
+            log.info("Topic %s failed to delete", topic_title)
             status_message = "Failed to delete"
             status = 500
 
     return jsonify(status=status, message=status_message)
+
+
+   
 
 @app.route("/user", methods=["DELETE"])
 @jwt_required()
@@ -277,6 +281,7 @@ def delete_comment():
         return jsonify(message="Comment ID is required", status=400)
 
     with AniFamDatabase() as db:
+
         comment = db.fetch_comment_by_id(comment_id)
         if not comment:
             return jsonify(message="Comment not found", status= 404)
