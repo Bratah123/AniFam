@@ -359,14 +359,14 @@ export async function deleteTopicComment(commentId: string) {
     }
 }
 
-export async function sendEditUserRequest(username: string, password: string, isAdmin: boolean) {
+export async function sendEditUserRequest(username: string, password: string, isAdmin: string) {
     const jwt = cookies().get('access_token');
     let rawResult: Response;
     let result;
     let form = new FormData();
     form.append('username', username);
     form.append('password', password);
-    form.append('is_admin', isAdmin.toString());
+    form.append('is_admin', isAdmin);
 
     try {
         rawResult = await fetch('http://127.0.0.1:5328/user', {

@@ -54,9 +54,16 @@ export default function UserList() {
     setCreateUser(false);
   };
 
+  const handleEditUserClose = (username: string, isAdmin: boolean) => {
+    users[users.findIndex((user) => user.username === username)].is_admin = isAdmin;
+    setUserToEdit('');
+    setCreateUser(false);
+  };
+
   const handleSave = (username: string) => {
-    users.push({username: username, email: '', password: '*******', is_admin: false});
+    users.push({username: username, email: '', password: '', is_admin: false});
   }
+  
   return (
     <div className="mx-auto max-w-screen-2xl px-4 py-8 sm:px-8">
       <div className="flex items-center justify-between pb-7">
@@ -130,7 +137,8 @@ export default function UserList() {
           <div className="relative z-50">
             <UserEditForm
               user={users.find((user) => user.username === userToEdit)!}
-              onClose={handleClose}
+              onClose={handleEditUserClose}
+              onCancel={handleClose}
             />
           </div>
         </div>

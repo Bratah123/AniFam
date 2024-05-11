@@ -521,4 +521,30 @@ class AniFamDatabase:
         self.con.commit()
         return True
 
+    def edit_user_password(self, username: str, password: str) -> bool:
+        hashed_password = hash_string(password)
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "UPDATE user SET password=? WHERE username=?",
+                (hashed_password, username)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error editing user: %s", e)
+            return False
+        self.con.commit()
+        return True 
+    
+    def edit_user_admin(self, username: str, is_admin: bool) -> bool:
+        cursor = self.con.cursor()
+        try:
+            cursor.execute(
+                "UPDATE user SET is_admin=? WHERE username=?",
+                (is_admin, username)
+            )
+        except sqlite3.OperationalError as e:
+            log.error("Error editing user: %s", e)
+            return False
+        self.con.commit()
+        return True
     

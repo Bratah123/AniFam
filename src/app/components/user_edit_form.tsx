@@ -11,16 +11,18 @@ type UserProps = {
 
 export default function UserEditForm(prop: {
     user: UserProps;
-    onClose: () => void;
+    onClose: (username: string, isAdmin: boolean) => void;
+    onCancel: () => void;
 }) {
     const name = prop.user.username;
     const [password, setPassword] = useState("");
     const [isAdmin, setIsAdmin] = useState(prop.user.is_admin);
 
     const handleSave = () => {
-        sendEditUserRequest(name, password, isAdmin).then((res) => {
+        const boolInt = isAdmin ? 1 : 0;
+        sendEditUserRequest(name, password, boolInt.toString()).then((res) => {
                 if (res.status === 200) {
-                    prop.onClose();
+                    prop.onClose(name, isAdmin);
                 } else {
                     alert(res.message);
                 }
@@ -83,7 +85,7 @@ export default function UserEditForm(prop: {
                     <button
                         className="ml-3 rounded border  bg-gray-100 px-8 py-2 text-sm text-gray-600 transition duration-150 ease-in-out hover:border-gray-400 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
                         onClick={() => {
-                            prop.onClose();
+                            prop.onCancel();
                         }}
                     >
                         Cancel

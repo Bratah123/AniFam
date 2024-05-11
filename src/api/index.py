@@ -537,6 +537,34 @@ def upload_topic_comment() -> tuple[Response, int]:
         
     return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200, commentId=comment_id), 200
 
+@app.route("/user", methods=["PUT"])
+@jwt_required()
+def update_user() -> tuple[Response, int]:
+    user = get_jwt_identity()
+    user_is_admin = get_jwt()["is_admin"]
+    if not user_is_admin:
+        return jsonify(logged_in_as=user, message="You are not authorized to access this route"), 401
+    
+    form_data = request.form
+
+    username = form_data["username"]
+    password = form_data["password"]
+    is_admin = int(form_data["is_admin"])
+
+    with AniFamDatabase() as db:
+        user = db.fetch_user(username)
+        if not user:
+            return jsonify(logged_in_as=user, message="User does not exist", status=404), 404
+        if password != "":
+            if db.edit_user_password(username, password):
+                log.info("User %s has updated their password", username)
+            else:
+                return jsonify(logged_in_as=user, message="Failed to update password", status=500), 500
+        if db.edit_user_admin(username, is_admin):
+            log.info("User %s has updated their admin status", username)
+
+    return jsonify(logged_in_as=user, is_admin=user_is_admin, status=200), 200
+
 
 def main(): # Entry point of flask server
     cli_arguments = sys.argv
