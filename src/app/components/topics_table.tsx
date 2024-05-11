@@ -19,7 +19,7 @@ export function TopicTable({ topicList = [] }: Props) {
   useEffect(() => {
     // Set the reversed topics only once on component mount
     setReversedTopics([...topicList].reverse());
-  }, [topicList]); 
+  }, [topicList]);
 
   const [rotations, setRotations] = useState<{ [key: number]: number }>({});
 
@@ -49,15 +49,14 @@ export function TopicTable({ topicList = [] }: Props) {
           }}
           className="flex flex-col items-center w-full p-4 bg-cyan-700 rounded-lg shadow-md hover:shadow-lg transition-opacity duration-300 hover:bg-cyan-700 hover:bg-opacity-80"
         >
+          <div className="user-box mb-2 bg-blue-500 text-gray-900 rounded-lg px-2 py-1">Posted by: {topic.user}</div>
           <TopicCard
             topic_id={topic.topic_id}
             title={topic.title}
             short_description={topic.short_description}
-            long_description={topic.long_description}
-            user={topic.user}
-          />
+            long_description={topic.long_description} user={''}          />
         </div>
       ))}
     </div>
-  );  
+  );
 }

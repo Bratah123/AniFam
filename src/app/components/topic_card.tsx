@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image'; 
+import Image from 'next/image';
 import { TopicToolTipProps } from '@/app/components/topic_card_tool_tip';
 import { useState } from 'react';
 
@@ -8,22 +8,21 @@ interface TopicCardProp extends TopicToolTipProps {
   topic_id: number;
   title: string;
   short_description: string;
-  user: string;
+  user: string;  
 }
 
 export default function TopicCard({
   title,
   short_description,
-  user,
-}: TopicCardProp) {
+}: TopicCardProp) {  
   const [rotation, setRotation] = useState(0);
 
   const handleMouseMove = (event: { currentTarget?: any; clientX?: any; }) => {
     const card = event.currentTarget;
     const { clientX } = event;
     const { left, width } = card.getBoundingClientRect();
-    const position = (clientX - left) / width; 
-    const angle = (position - 0.5) * 10; 
+    const position = (clientX - left) / width;
+    const angle = (position - 0.5) * 10;
     setRotation(angle);
   };
 
@@ -33,10 +32,10 @@ export default function TopicCard({
 
   return (
     <div
-    onMouseMove={handleMouseMove}
-    onMouseLeave={handleMouseLeave}
-    style={{ transform: `rotateY(${rotation}deg)`, transition: 'transform 0.1s' }}
-    className="relative w-full h-full bg-cyan-500 bg-opacity-80 rounded-lg shadow-md hover:shadow-lg transition-opacity duration-300"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ transform: `rotateY(${rotation}deg)`, transition: 'transform 0.1s' }}
+      className="relative w-full h-full bg-cyan-500 bg-opacity-80 rounded-lg shadow-md hover:shadow-lg transition-opacity duration-300"
     >
       <div className="p-6">
         <div className="absolute top-0 left-0">
@@ -48,13 +47,10 @@ export default function TopicCard({
             className="rounded-lg"
           />
         </div>
-        <div className="user-box absolute top-0 right-0 p-2 bg-blue-500 text-gray-900 rounded-lg">
-          Posted by: {user}
-        </div>
         <Link
           href={{
             pathname: '/topics',
-            query: { topic_title: title, short_description, user },
+            query: { topic_title: title, short_description },
           }}
           passHref
         >
