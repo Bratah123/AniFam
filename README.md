@@ -69,7 +69,7 @@ These instructions are only applicable to a Linux OS Environment as intended.
 ## Gallery
 ![Login](https://github.com/Bratah123/AniFam/assets/58405975/4f80f5d8-02a4-4d71-8201-7073b9771ab6)
 ![Homepage](https://github.com/Bratah123/AniFam/assets/58405975/6f6f96a8-cf3c-44d8-bc67-acc89aa3d423)
-![Admin](https://github.com/Bratah123/AniFam/assets/58405975/5045e263-e95e-443f-b817-26f8deafba56)
+![Admin](https://github.com/Bratah123/AniFam/assets/58405975/9b18bafd-9d80-4733-b6d0-c29d4f0a7db7)
 ![Comments](https://github.com/Bratah123/AniFam/assets/58405975/0e907673-87bf-4a0e-946e-4fbbf95787d9)
 ![Forums](https://github.com/Bratah123/AniFam/assets/58405975/21a58c2d-520d-437a-9eea-b2e2f4d4c891)
 
