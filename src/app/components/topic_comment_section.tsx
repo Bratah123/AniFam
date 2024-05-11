@@ -24,7 +24,6 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
         setLocalComments(comments as TopicCommentProps[]); 
     }, [comments]);
 
-
     async function handleDelete(commentId: number) {
         if (window.confirm("Are you sure you want to delete this comment?")) {
             try {
@@ -32,16 +31,14 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
                 if (response.status === 200) {
                     setLocalComments(prevComments => prevComments.filter(comment => comment.commentId !== commentId));
                 } else {
-                        alert('Failed to delete comment: ' + response.message);
-                    }
+                    alert('Failed to delete comment: ' + response.message);
+                }
             } catch (error) {
                 console.error('Error deleting comment:', error);
                 alert('Error deleting comment');
             }
         }
     }
-    
-    
 
     async function onCommentSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -49,21 +46,18 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
             alert("Please enter a non-empty comment.");
             return;
         }
-    
+
         const res = await uploadTopicComment(topic_title, newComment) as TopicCommentResponse;
-    
+
         if (res.status === 200 && res.commentId) {
-            // If the response is successful and includes a commentId, update local state
             const newCommentData = {
                 user: user,
                 comment: newComment,
                 date: new Date().toISOString(),
-                replies: [],
                 commentId: res.commentId || 0, 
                 onDelete: () => handleDelete(res.commentId || 0) 
             };
 
-            // Add the new comment to local state
             setLocalComments([newCommentData, ...localComments]);
             setNewComment('');  
         } else {
@@ -72,20 +66,29 @@ export function TopicCommentSection({ comments, user, topic_title }: TopicCommen
     }
     
     return (
-        <div>
-            <form onSubmit={onCommentSubmit}>
-                <textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Write a new comment..."
-                    rows={3}
-                    style={{ width: '100%', color: 'black'}}
-                />
-                <button type="submit">Post Comment</button>
+        <div className="bg-gray-900 py-8 px-6 antialiased">
+            <form onSubmit={onCommentSubmit} className="mb-6">
+                <div className="py-2 px-4 mb-4 rounded-lg rounded-t-lg border bg-gray-800 border-gray-700">
+                    <label htmlFor="newComment" className="sr-only">Your comment</label>
+                    <textarea
+                        id="newComment"
+                        rows={3}
+                        className="px-0 w-full text-sm border-0 focus:ring-0 focus:outline-none text-white placeholder-gray-400 bg-gray-800"
+                        placeholder="Write a new comment..."
+                        required
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                    />
+                </div>
+                <button
+                    className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-400 rounded-lg">
+                    Post Comment
+                </button>
             </form>
             {localComments.map((comment) => (
-    <TopicComment key={comment.commentId} {...comment} onDelete={() => handleDelete(comment.commentId)} />
-))}
+                <TopicComment key={comment.commentId} {...comment} onDelete={() => handleDelete(comment.commentId)} />
+            ))}
         </div>
     );
 }
+

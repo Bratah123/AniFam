@@ -21,9 +21,11 @@ export function TopicComment(props: TopicCommentProps) {
                         className="mr-2 w-6 h-6 rounded-full"
                         src="/anya_chibi_happy.jpg"
                         alt="anya pfp"
-                        width={24}
-                        height={24}/>
-                    <p className='px-2'>{props.user}</p>
+                        width={150} 
+                        height={150}/>
+                    <p className="inline-flex items-center text-sm text-gray-900 dark:text-white font-semibold px-2">
+                        {props.user} 
+                    </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                         <time title={props.date}>{props.date}</time>
                     </p>
