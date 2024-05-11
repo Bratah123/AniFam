@@ -1,4 +1,4 @@
-![image](https://github.com/Bratah123/AniFam/assets/58405975/5b6e57fe-dda8-4217-9944-a8b84cbe8f04)# Ani x Family
+# Ani x Family
 [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
 
 Ani x Family (A play on words to the show Spy x Family) is an anime-based plex server that aims to allow users to stream anime without the annoying ads and bloat that other public streaming services have. 
