@@ -14,7 +14,7 @@ export interface TopicCommentProps extends BasicTopicCommentProps {
 
 export function TopicComment(props: TopicCommentProps) {
     return (
-        <div className='bg-gray-900'>
+        <div className='bg-gray-900' style={{ borderBottom: '1px solid black', paddingBottom: '10px', marginBottom: '10px' }}>
             <footer className="flex justify-between items-center mb-2 my-10">
                 <div className="flex items-center">
                     <Image
@@ -24,7 +24,7 @@ export function TopicComment(props: TopicCommentProps) {
                         width={150} 
                         height={150}/>
                     <p className="inline-flex items-center text-sm text-gray-900 dark:text-white font-semibold px-2">
-                        {props.user} 
+                        {props.user}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                         <time title={props.date}>{props.date}</time>
@@ -33,11 +33,11 @@ export function TopicComment(props: TopicCommentProps) {
             </footer>
             <p className="text-gray-500 dark:text-gray-400">{props.comment}</p>
             <div className="flex items-center mt-4 space-x-4">
-                <button type="button" onClick={() => props.onDelete(props.commentId)}
-                    className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-                    <Image src="/trash_can_icon.webp" alt="trash can icon" width={20} height={20} />
-                    Delete
-                </button>
+            <button type="button" onClick={() => props.onDelete(props.commentId)}
+                className="flex items-center text-sm text-gray-500 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-400 font-medium p-2 rounded">
+                <Image src="/trash_can_icon.webp" alt="trash can icon" width={20} height={20} />
+                Delete
+            </button>
             </div>
         </div>
     );
