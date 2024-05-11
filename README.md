@@ -1,4 +1,4 @@
-# Ani x Family
+![image](https://github.com/Bratah123/AniFam/assets/58405975/5b6e57fe-dda8-4217-9944-a8b84cbe8f04)# Ani x Family
 [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
 
 Ani x Family (A play on words to the show Spy x Family) is an anime-based plex server that aims to allow users to stream anime without the annoying ads and bloat that other public streaming services have. 
@@ -70,6 +70,9 @@ These instructions are only applicable to a Linux OS Environment as intended.
 ![Login](https://github.com/Bratah123/AniFam/assets/58405975/4f80f5d8-02a4-4d71-8201-7073b9771ab6)
 ![Homepage](https://github.com/Bratah123/AniFam/assets/58405975/6f6f96a8-cf3c-44d8-bc67-acc89aa3d423)
 ![Admin](https://github.com/Bratah123/AniFam/assets/58405975/5045e263-e95e-443f-b817-26f8deafba56)
+![Comments](https://github.com/Bratah123/AniFam/assets/58405975/0e907673-87bf-4a0e-946e-4fbbf95787d9)
+![Forums](https://github.com/Bratah123/AniFam/assets/58405975/21a58c2d-520d-437a-9eea-b2e2f4d4c891)
+
 
 # Disclaimer
 `Ani x Family` is an open-source full stack web application that collects anime-related metadata and media, and serves them to end users. `Ani x Family` is an educational project for demonstrating various techniques, such as web scraping and UI design. The creators of `Ani x Family` urge users and end users of the project, and/or any derivatives of `Ani x Family`, to support the creators of anime titles by purchasing their works, merchandise, and/or a subscription for consuming them, through official channels. `Ani x Family` is non-monetised, and provided as is. Every reasonable effort has been taken to ensure correctness and reliability of `Ani x Family`. We will not be liable for any special, direct, indirect, or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action if contract, negligence or other tortious action, arising out of or in connection with the use of `Ani x Family` (in part or in whole).
